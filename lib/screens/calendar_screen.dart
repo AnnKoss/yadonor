@@ -3,15 +3,14 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../providers/calendar_events_provider.dart';
+
 import '../widgets/event_list_filtered.dart';
 import '../widgets/calendar.dart';
 import '../widgets/button.dart';
 import './calendar_add_screen.dart';
 import '../widgets/main_drawer.dart';
-import '../providers/calendar_provider.dart';
 // import '../widgets/build_shadow_container.dart';
-
-// enum CalendarInfo { future, past, calendar }
 
 class CalendarScreen extends StatefulWidget {
   static const routeName = '/calendar';
@@ -21,10 +20,24 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
+  FilterType eventsFilter = FilterType.current;
+
   @override
   Widget build(BuildContext context) {
-    final calendarData = Provider.of<CalendarProvider>(context);
-    FilterType eventsFilter = calendarData.eventsFilter;
+    final calendarData = Provider.of<CalendarEventsProvider>(context);
+    print('build');
+
+    void selectFilter(FilterType result) {
+      setState(() {
+        eventsFilter = result;
+      });
+      print(eventsFilter);
+      if (eventsFilter == FilterType.current) {
+        calendarData.changeVisibleDates(
+            DateTime(DateTime.now().year, DateTime.now().month, 1));
+        calendarData.getCurrentMonthEvents();
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -34,8 +47,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ),
         actions: <Widget>[
           PopupMenuButton<FilterType>(
-            onSelected: Provider.of<CalendarProvider>(context, listen: false)
-                .selectFilter,
+            onSelected: selectFilter,
             itemBuilder: (context) => <PopupMenuEntry<FilterType>>[
               PopupMenuItem<FilterType>(
                 value: FilterType.future,
@@ -48,7 +60,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
               PopupMenuDivider(),
               PopupMenuItem<FilterType>(
-                value: FilterType.calendar,
+                value: FilterType.current,
                 child: Text('Показать календарь'),
               ),
             ],
@@ -56,7 +68,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ],
       ),
       drawer: MainDrawer(),
-      body: (eventsFilter == FilterType.calendar)
+      body: (eventsFilter == FilterType.current)
+          // ? Text('current')
+          // : Text('not current'),
           ? Column(
               children: <Widget>[
                 Card(
@@ -66,22 +80,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
                 Flexible(
                   fit: FlexFit.loose,
-                  child: EventListFiltered(),
+                  child: EventListFiltered(eventsFilter),
                 ),
               ],
             )
-          : EventListFiltered(),
-      // // button(
-      // //   context: context,
-      // //   onPressed: () => ,
-      // //   buttonText: isFutureDate ? 'Запланировать' : 'Добавить',
-      // // ),
+          : EventListFiltered(eventsFilter),
+      // button(
+      //   context: context,
+      //   onPressed: () => ,
+      //   buttonText: isFutureDate ? 'Запланировать' : 'Добавить',
+      // ),
       floatingActionButton: FloatingActionButton(
         onPressed:
             // Provider.of<CalendarProvider>(context).isCorrectDate ?
-            Provider.of<CalendarProvider>(context).addEvent,
+            Provider.of<CalendarEventsProvider>(context).addEvent,
         // : null,
-        backgroundColor: Provider.of<CalendarProvider>(context).isCorrectDate
+        backgroundColor: Provider.of<CalendarEventsProvider>(context).isAvaliableDate
             ? Theme.of(context).accentColor
             : Color(0xffed6056),
         elevation: 5,

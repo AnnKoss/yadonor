@@ -2,9 +2,11 @@
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-import '../providers/calendar_provider.dart';
+import '../providers/calendar_events_provider.dart';
 
 class EventListFiltered extends StatefulWidget {
+  final FilterType eventsFilter;
+  EventListFiltered(this.eventsFilter);
   @override
   _EventListFilteredState createState() => _EventListFilteredState();
 }
@@ -12,45 +14,36 @@ class EventListFiltered extends StatefulWidget {
 class _EventListFilteredState extends State<EventListFiltered> {
   @override
   Widget build(BuildContext context) {
-    final calendarData = Provider.of<CalendarProvider>(context);
-    final Map calendarEvents = calendarData.events;
-    FilterType eventsFilter = calendarData.eventsFilter;
-    List displayedEvents = calendarData.displayedEvents;
-    List currentMonthEvents = calendarData.currentMonthEvents;
+    final calendarData = Provider.of<CalendarEventsProvider>(context);
+    // FilterType eventsFilter = calendarData.eventsFilter;
+    List<Appointment> displayedEvents;
+    final List<Appointment> currentMonthEvents =
+        calendarData.getCurrentMonthEvents();
+    final List<Appointment> futureEvents = calendarData.futureEvents;
+    final List<Appointment> pastEvents = calendarData.pastEvents;
+
     String eventsText = 'Донации в этом месяце:';
     // FilterType eventsFilter = calendarData.eventsFilter;
-
-    List futureEvents = calendarData.events.entries.where(
-      (entry) {
-        return entry.key.isAfter(DateTime.now().subtract(Duration(days: 1)));
-      },
-    ).toList();
-
-    List pastEvents = calendarData.events.entries.where(
-      (entry) {
-        return entry.key.isBefore(DateTime.now());
-      },
-    ).toList();
-
-    switch (eventsFilter) {
+  
+    switch (widget.eventsFilter) {
       case FilterType.future:
         displayedEvents = futureEvents;
         eventsText = 'Предстоящие донации:';
-        print(displayedEvents);
+        // print(displayedEvents);
         break;
       case FilterType.past:
         displayedEvents = pastEvents;
         eventsText = 'Прошедшие донации:';
-        print(displayedEvents);
+        // print(displayedEvents);
         break;
-      case FilterType.calendar:
+      case FilterType.current:
         displayedEvents = currentMonthEvents;
-        print(displayedEvents);
+        // print(displayedEvents);
         break;
       default:
         displayedEvents = currentMonthEvents;
         eventsText = 'Донации в этом месяце:';
-        print(displayedEvents);
+        // print(displayedEvents);
         break;
     }
 
@@ -90,17 +83,14 @@ class _EventListFilteredState extends State<EventListFiltered> {
                                 ),
                               ),
                               title: Text(DateFormat('d MMMM y, EEEE', 'ru')
-                                  .format(event.key)),
-                              subtitle: Text(event.value[0].toString()),
+                                  .format(event.day)),
+                              subtitle: Text(event.event[0]),
                               trailing: IconButton(
                                 icon: Icon(Icons.close),
                                 onPressed: () {
-                                  Provider.of<CalendarProvider>(context,
+                                  Provider.of<CalendarEventsProvider>(context,
                                           listen: false)
-                                      .removeEvent(event.key);
-                                  Provider.of<CalendarProvider>(context,
-                                          listen: false)
-                                      .updateCurrentMonthEvents();
+                                      .removeEvent(event.day);
                                 },
                               ),
                             ),

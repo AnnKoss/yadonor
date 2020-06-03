@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../providers/calendar_provider.dart';
+import '../providers/calendar_events_provider.dart';
 import '../widgets/button.dart';
 
 class Calendar extends StatefulWidget {
@@ -34,8 +34,11 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    final calendarData = Provider.of<CalendarProvider>(context);
-    final calendarEvents = calendarData.events;
+    final calendarData = Provider.of<CalendarEventsProvider>(context);
+    final Map<DateTime, List> calendarEvents = Map.fromIterable(
+        calendarData.events,
+        key: (appointment) => appointment.day,
+        value: (appointment) => appointment.event);
 
     return TableCalendar(
       calendarController: _calendarController,
@@ -51,14 +54,14 @@ class _CalendarState extends State<Calendar> {
       ),
       startingDayOfWeek: StartingDayOfWeek.monday,
       locale: 'ru_Ru',
-      onDaySelected: Provider.of<CalendarProvider>(context).onDaySelected,
+      onDaySelected: Provider.of<CalendarEventsProvider>(context).onDaySelected,
       events: calendarEvents,
       rowHeight: 50,
       onVisibleDaysChanged: (from, to, format) {
-        Provider.of<CalendarProvider>(context, listen: false)
+        Provider.of<CalendarEventsProvider>(context, listen: false)
             .changeVisibleDates(from);
-        Provider.of<CalendarProvider>(context, listen: false)
-            .updateCurrentMonthEvents();
+        Provider.of<CalendarEventsProvider>(context, listen: false)
+            .getCurrentMonthEvents();
         // print(from);
       },
     );

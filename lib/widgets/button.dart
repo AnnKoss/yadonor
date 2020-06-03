@@ -9,7 +9,7 @@ Widget button({
     width: 300,
     height: 55,
     margin: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-    child: FlatButton(
+    child: RaisedButton(
       onPressed: onPressed,
       child: Text(
         buttonText,
@@ -20,6 +20,7 @@ Widget button({
       ),
       textColor: Colors.white,
       color: Theme.of(context).accentColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
     ),
   );
 }

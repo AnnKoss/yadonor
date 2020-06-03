@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import './providers/calendar_provider.dart';
+import './providers/calendar_events_provider.dart';
 
+import './screens/main_screen.dart';
 import './screens/calendar_add_screen.dart';
 import './screens/calendar_screen.dart';
 import './screens/precautions_screen.dart';
-// import './screens/success_result_screen.dart';
 import './screens/questionary_result_screen.dart';
 import './screens/pre_questionary_screen.dart';
 import './screens/questionary_screen.dart';
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (ctx) => CalendarProvider(),
+      create: (ctx) => CalendarEventsProvider(),
       child: MaterialApp(
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
@@ -57,8 +57,9 @@ class MyApp extends StatelessWidget {
           ),
           dividerColor: Theme.of(context).primaryColor,
         ),
-        home: CalendarScreen(),
+        home: MainScreen(),
         routes: {
+          MainScreen.routeName: (ctx) => MainScreen(),
           PreQuestionaryScreen.routeName: (ctx) => PreQuestionaryScreen(),
           QuestionaryScreen.routeName: (ctx) => QuestionaryScreen(),
           QuestionaryResultScreen.routeName: (ctx) => QuestionaryResultScreen(),

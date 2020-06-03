@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 
+import '../screens/main_screen.dart';
 import '../screens/precautions_screen.dart';
 import '../screens/pre_questionary_screen.dart';
 import '../screens/calendar_screen.dart';
@@ -69,10 +70,13 @@ class MainDrawer extends StatelessWidget {
             thickness: 2,
           ),
           buildListTile(
-              context, Icons.assignment, 'Анкета донора', PreQuestionaryScreen.routeName),
-          buildListTile(context, Icons.event, 'Календарь донаций', CalendarScreen.routeName),
-          buildListTile(
-              context, Icons.error, 'Противопоказания к донорству', PrecautionsScreen.routeName),
+              context, Icons.home, 'На главную', MainScreen.routeName),
+          buildListTile(context, Icons.assignment, 'Анкета донора',
+              PreQuestionaryScreen.routeName),
+          buildListTile(context, Icons.event, 'Календарь донаций',
+              CalendarScreen.routeName),
+          buildListTile(context, Icons.error, 'Противопоказания к донорству',
+              PrecautionsScreen.routeName),
           // buildListTile(
           //     context, Icons.help_outline, 'Как проходит донация', TestScreen),
           // buildListTile(context, Icons.check, 'Рекомендации до и после донации',
