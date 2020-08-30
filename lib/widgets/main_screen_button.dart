@@ -1,7 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 
-Widget button({
-  BuildContext context,
+Widget mainScreenButton({
   void Function() onPressed,
   String buttonText,
 }) {
@@ -20,8 +19,8 @@ Widget button({
         ),
       ),
       textColor: Colors.white,
-      color: Theme.of(context).accentColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      color: Colors.black12,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5), side: BorderSide(color: Colors.white)),
     ),
   );
 }

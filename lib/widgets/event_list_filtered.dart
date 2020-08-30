@@ -3,10 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 import '../providers/calendar_events_provider.dart';
+import '../providers/calendar_screen_provider.dart';
+import '../widgets/event_card.dart';
 
 class EventListFiltered extends StatefulWidget {
   final FilterType eventsFilter;
   EventListFiltered(this.eventsFilter);
+
   @override
   _EventListFilteredState createState() => _EventListFilteredState();
 }
@@ -14,38 +17,38 @@ class EventListFiltered extends StatefulWidget {
 class _EventListFilteredState extends State<EventListFiltered> {
   @override
   Widget build(BuildContext context) {
-    final calendarData = Provider.of<CalendarEventsProvider>(context);
-    // FilterType eventsFilter = calendarData.eventsFilter;
-    List<Appointment> displayedEvents;
-    final List<Appointment> currentMonthEvents =
-        calendarData.getCurrentMonthEvents();
-    final List<Appointment> futureEvents = calendarData.futureEvents;
-    final List<Appointment> pastEvents = calendarData.pastEvents;
+    // final calendarEventsData = Provider.of<CalendarEventsProvider>(context);
+    final calendarScreenData = Provider.of<CalendarScreenProvider>(context);
+    // calendarScreenData.displayFilteredEvents(widget.eventsFilter);
+
+    List<Appointment> displayedEvents = calendarScreenData.displayedEvents;
 
     String eventsText = 'Донации в этом месяце:';
     // FilterType eventsFilter = calendarData.eventsFilter;
-  
+
     switch (widget.eventsFilter) {
       case FilterType.future:
-        displayedEvents = futureEvents;
+        displayedEvents = calendarScreenData.getFutureEvents();
         eventsText = 'Предстоящие донации:';
         // print(displayedEvents);
         break;
       case FilterType.past:
-        displayedEvents = pastEvents;
+        displayedEvents = calendarScreenData.getPastEvents();
         eventsText = 'Прошедшие донации:';
         // print(displayedEvents);
         break;
       case FilterType.current:
-        displayedEvents = currentMonthEvents;
+        displayedEvents = calendarScreenData.getCurrentMonthEvents();
         // print(displayedEvents);
         break;
       default:
-        displayedEvents = currentMonthEvents;
+        displayedEvents = calendarScreenData.getCurrentMonthEvents();
         eventsText = 'Донации в этом месяце:';
         // print(displayedEvents);
         break;
     }
+
+    print('displayedEvents: ' + displayedEvents.toString());
 
     return (displayedEvents.isNotEmpty)
         ? Column(
@@ -55,46 +58,48 @@ class _EventListFilteredState extends State<EventListFiltered> {
                   eventsText,
                   style: TextStyle(fontSize: 20),
                 ),
-                margin: EdgeInsets.symmetric(vertical: 10),
+                margin: EdgeInsets.only(top: 10),
               ),
               Expanded(
                 child: Scrollbar(
                   child: ListView(
                     children: displayedEvents
                         .map(
-                          (event) => Card(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 5),
-                            elevation: 3,
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Theme.of(context).accentColor,
-                                radius: 20,
-                                child:
-                                    // Icon(
-                                    // Icons.event_available,
-                                    // size: 30,
-                                    // color: Colors.white,
-                                    Image(
-                                  image: AssetImage(
-                                      'assets/images/blood_drop.png'),
-                                  height: 25,
-                                  color: Colors.white,
-                                ),
+                          (appointment) => Card(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 5),
+                              elevation: 3,
+                              child: 
+                              EventCard(appointment),
+                              // ListTile(
+                              //   leading: CircleAvatar(
+                              //     backgroundColor: Theme.of(context).accentColor,
+                              //     radius: 20,
+                              //     child:
+                              //         // Icon(
+                              //         // Icons.event_available,
+                              //         // size: 30,
+                              //         // color: Colors.white,
+                              //         Image(
+                              //       image: AssetImage(
+                              //           'assets/images/blood_drop.png'),
+                              //       height: 25,
+                              //       color: Colors.white,
+                              //     ),
+                              //   ),
+                              //   title: Text(DateFormat('d MMMM y, EEEE', 'ru')
+                              //       .format(appointment.day)),
+                              //   subtitle: Text(appointment.event),
+                              //   trailing: IconButton(
+                              //     icon: Icon(Icons.close),
+                              //     onPressed: () {
+                              //       Provider.of<CalendarEventsProvider>(context,
+                              //               listen: false)
+                              //           .removeEvent(appointment.day);
+                              //     },
+                              //   ),
+                              // ),
                               ),
-                              title: Text(DateFormat('d MMMM y, EEEE', 'ru')
-                                  .format(event.day)),
-                              subtitle: Text(event.event[0]),
-                              trailing: IconButton(
-                                icon: Icon(Icons.close),
-                                onPressed: () {
-                                  Provider.of<CalendarEventsProvider>(context,
-                                          listen: false)
-                                      .removeEvent(event.day);
-                                },
-                              ),
-                            ),
-                          ),
                           // ),
                         )
                         .toList(),

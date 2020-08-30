@@ -3,7 +3,7 @@
 import '../screens/main_screen.dart';
 import '../screens/precautions_screen.dart';
 import '../screens/pre_questionary_screen.dart';
-import '../screens/calendar_screen.dart';
+import '../screens/calendar_screen_view.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget buildListTile(
@@ -74,7 +74,7 @@ class MainDrawer extends StatelessWidget {
           buildListTile(context, Icons.assignment, 'Анкета донора',
               PreQuestionaryScreen.routeName),
           buildListTile(context, Icons.event, 'Календарь донаций',
-              CalendarScreen.routeName),
+              CalendarScreenView.routeName),
           buildListTile(context, Icons.error, 'Противопоказания к донорству',
               PrecautionsScreen.routeName),
           // buildListTile(

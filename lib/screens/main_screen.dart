@@ -4,10 +4,13 @@ import 'package:intl/intl.dart';
 
 import '../providers/calendar_events_provider.dart';
 
-import './calendar_screen.dart';
-import './pre_questionary_screen.dart';
+import './calendar_screen_view.dart';
+import '../screens/pre_questionary_screen.dart';
+import '../screens/adress_screen.dart';
 import '../widgets/button.dart';
+import '../widgets/main_screen_button.dart';
 import '../widgets/main_drawer.dart';
+import '../widgets/event_card.dart';
 
 class MainScreen extends StatefulWidget {
   static const routeName = '/main';
@@ -18,11 +21,13 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
+    print('build mainScreen');
     // final calendarData = Provider.of<CalendarProvider>(context);
     // List futureEvents = calendarData.futureEvents;
     // print(futureEvents[0]);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       // backgroundColor: Theme.of(context).primaryColorLight,
       appBar: AppBar(
         title: Text(
@@ -40,57 +45,62 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
         child: Column(
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
               child: Card(
                 margin: EdgeInsets.symmetric(vertical: 10),
                 elevation: 3,
                 child: Consumer<CalendarEventsProvider>(
-                  builder: (context, calendarData, child) {
+                  builder: (context, calendarEventsData, child) {
                     return Column(
                       // crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Container(
                           child: Text(
-                            'Ближайшая запланированная донация:',
+                            'Ближайшая донация:',
                             textAlign: TextAlign.center,
                           ),
                           padding: EdgeInsets.only(top: 10),
                           width: double.infinity,
                         ),
-                        (calendarData.futureEvents.length > 0)
+                        (calendarEventsData.getNearestAppointment() != null)
                             ? Container(
                                 width: 300,
                                 margin: EdgeInsets.all(10),
                                 // color: Colors.amber,
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundColor:
-                                        Theme.of(context).accentColor,
-                                    radius: 20,
-                                    child:
-                                        // Icon(
-                                        // Icons.event_available,
-                                        // size: 30,
-                                        // color: Colors.white,
-                                        Image(
-                                      image: AssetImage(
-                                          'assets/images/blood_drop.png'),
-                                      height: 25,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  title: Text(DateFormat('d MMMM y, EEEE', 'ru')
-                                      .format(
-                                          calendarData.futureEvents[0].day)),
-                                  subtitle: Text(calendarData
-                                      .futureEvents[0].event[0]
-                                      .toString()),
-                                ),
+                                child: EventCard(
+                                    calendarEventsData.getNearestAppointment()),
+                                //     ListTile(
+                                //   leading: CircleAvatar(
+                                //     backgroundColor:
+                                //         Theme.of(context).accentColor,
+                                //     radius: 20,
+                                //     child:
+                                //         // Icon(
+                                //         // Icons.event_available,
+                                //         // size: 30,
+                                //         // color: Colors.white,
+                                //         Image(
+                                //       image: AssetImage(
+                                //           'assets/images/blood_drop.png'),
+                                //       height: 25,
+                                //       color: Colors.white,
+                                //     ),
+                                //   ),
+                                //   title: Text(
+                                //       DateFormat('d MMMM y, EEEE', 'ru')
+                                //           .format(calendarEventsData
+                                //               .getNearestAppointment()
+                                //               .day)),
+                                //   subtitle: Text(calendarEventsData
+                                //       .getNearestAppointment()
+                                //       .event),
+                                // ),
                               )
                             : FlatButton(
                                 onPressed: () => Navigator.of(context)
-                                    .pushNamed(CalendarScreen.routeName),
+                                    .pushNamed(CalendarScreenView.routeName),
                                 child: Text('Запланировать',
                                     style: TextStyle(fontSize: 20)),
                                 textColor: Theme.of(context).accentColor,
@@ -104,7 +114,7 @@ class _MainScreenState extends State<MainScreen> {
               //   (futureEvents.length > 0) ? 'Yep' : 'None',
               // ),
             ),
-            SizedBox(height: 50),
+            SizedBox(height: 20),
             // FlatButton(
             //   onPressed: () =>
             //       Navigator.of(context).pushNamed(CalendarScreen.routeName),
@@ -124,23 +134,31 @@ class _MainScreenState extends State<MainScreen> {
             //   child: Text('АДРЕСА', style: TextStyle(fontSize: 26)),
             //   textColor: Theme.of(context).primaryColor,
             // ),
-            button(
-              context: context,
+
+            mainScreenButton(
               onPressed: () =>
-                  Navigator.of(context).pushNamed(CalendarScreen.routeName),
+                  Navigator.of(context).pushNamed(CalendarScreenView.routeName),
               buttonText: 'КАЛЕНДАРЬ',
             ),
-            button(
-              context: context,
+            mainScreenButton(
               onPressed: () => Navigator.of(context)
                   .pushReplacementNamed(PreQuestionaryScreen.routeName),
               buttonText: 'ПОДГОТОВКА К ДОНАЦИИ',
             ),
-            button(
-              context: context,
-              onPressed: () {},
+            mainScreenButton(
+              onPressed: () => Navigator.of(context)
+                  .pushReplacementNamed(AdressScreen.routeName),
               buttonText: 'АДРЕСА',
             ),
+            // Container(
+            //   margin: EdgeInsets.only(left: 10),
+            //   child: Image(
+            //       image: AssetImage('assets/images/heartbeat.png'),
+            //       height: 120,
+            //       width: double.infinity,
+            //       color: Theme.of(context).accentColor,
+            //     ),
+            // ),
           ],
         ),
       ),

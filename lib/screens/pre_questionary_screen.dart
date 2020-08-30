@@ -37,7 +37,7 @@ class PreQuestionaryScreen extends StatelessWidget {
               context: context,
               onPressed: () => Navigator.of(context)
                   .pushReplacementNamed(QuestionaryScreen.routeName),
-              buttonText: 'Начать опрос',
+              buttonText: 'НАЧАТЬ ОПРОС',
             ),
           ],
         ),
