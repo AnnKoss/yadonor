@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/main_drawer.dart';
-import '../widgets/quiz-item.dart';
+import '../models/quiz-item.dart';
 import '../widgets/answer_option.dart';
 import '../widgets/question_text.dart';
-import '../widgets/build_shadow_container.dart';
 
 import '../screens/questionary_result_screen.dart';
 
@@ -19,12 +18,13 @@ class _QuestionaryScreenState extends State<QuestionaryScreen> {
   var questionIndex = 0;
 
   void onClick(int order) {
-    int result = questions[questionIndex].onChoose(order);
-    if ((result == NEXT) && (questionIndex < (questions.length - 1))) {
+    AnswerResult result = questions[questionIndex].onChoose(order);
+    if ((result == AnswerResult.next) &&
+        (questionIndex < (questions.length - 1))) {
       setState(() {
         questionIndex++;
       });
-    } else if (result == FAIL) {
+    } else if (result == AnswerResult.fail) {
       Navigator.of(context).pushReplacementNamed(
         QuestionaryResultScreen.routeName,
         arguments: {
@@ -35,7 +35,8 @@ class _QuestionaryScreenState extends State<QuestionaryScreen> {
       setState(() {
         questionIndex = 0;
       });
-    } else if ((result == NEXT) && (questionIndex == (questions.length - 1))) {
+    } else if ((result == AnswerResult.next) &&
+        (questionIndex == (questions.length - 1))) {
       Navigator.of(context).pushReplacementNamed(
         QuestionaryResultScreen.routeName,
         arguments: {
@@ -46,7 +47,7 @@ class _QuestionaryScreenState extends State<QuestionaryScreen> {
       setState(() {
         questionIndex = 0;
       });
-    } else if (result == SKIP) {
+    } else if (result == AnswerResult.skip) {
       setState(() {
         questionIndex += 3;
       });
@@ -62,31 +63,40 @@ class _QuestionaryScreenState extends State<QuestionaryScreen> {
           'АНКЕТА ДОНОРА',
           style: Theme.of(context).textTheme.title,
         ),
+        actions: <Widget>[
+          BackButton(onPressed: () {
+            (questionIndex > 0)
+                ? setState(() {
+                    questionIndex -= 1;
+                  })
+                : Navigator.of(context).pop();
+          })
+        ],
         // backgroundColor: Colors.white,
         // iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
       ),
       drawer: MainDrawer(),
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 15),
-        // width: double.infinity,
-        // padding: EdgeInsets.all(10),
-        // color: Theme.of(context).primaryColor,
-        child: buildShadowContainer(
-          child: Container(
-            child: Column(
-              children: [
-                QuestionText(questions[questionIndex].questionText),
-                AnswerOption(questions[questionIndex].answer1, onClick, 0),
-                AnswerOption(questions[questionIndex].answer2, onClick, 1),
-              ],
-            ),
-          ),
+        width: double.infinity,
+        padding: EdgeInsets.only(
+          top: 20,
+          left: 20,
+          right: 20,
+          bottom: 10,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            QuestionText(questions[questionIndex].questionText),
+            AnswerOption(questions[questionIndex].answer1, onClick, 0),
+            AnswerOption(questions[questionIndex].answer2, onClick, 1),
+          ],
         ),
       ),
     );
   }
 
-  final questions = [
+  final List questions = [
     QuizItem(
       'Вам уже есть 18 лет?',
       'Да',

@@ -27,7 +27,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    
     // Widget homeScreen;
 
     // FirebaseAuth.instance.authStateChanges().listen((User user) {
@@ -59,16 +58,16 @@ class _MyAppState extends State<MyApp> {
         );
       },
     );
-    
   }
 }
 
 class DonorApp extends StatelessWidget {
-
-  // DonorApp(this.homeScreen);
-
   @override
   Widget build(BuildContext context) {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final User user = _auth.currentUser;
+    // final String userId = user.uid;
+
     return ListenableProvider<CalendarEventsProvider>(
       create: (ctx) => CalendarEventsProvider(),
       child: MaterialApp(
@@ -109,15 +108,14 @@ class DonorApp extends StatelessWidget {
           ),
           dividerColor: Theme.of(context).primaryColor,
         ),
-        home: AuthScreen(),
-        // homeScreen,
+        home: (user != null) ? MainScreen() : AuthScreen(),
+        // home: AdressScreen(),
         routes: {
           MainScreen.routeName: (ctx) => MainScreen(),
           AuthScreen.routeName: (ctx) => AuthScreen(),
           PreQuestionaryScreen.routeName: (ctx) => PreQuestionaryScreen(),
           QuestionaryScreen.routeName: (ctx) => QuestionaryScreen(),
-          QuestionaryResultScreen.routeName: (ctx) =>
-              QuestionaryResultScreen(),
+          QuestionaryResultScreen.routeName: (ctx) => QuestionaryResultScreen(),
           PrecautionsScreen.routeName: (ctx) => PrecautionsScreen(),
           CalendarScreenView.routeName: (ctx) => CalendarScreenView(),
           AdressScreen.routeName: (ctx) => AdressScreen(),

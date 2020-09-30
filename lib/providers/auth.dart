@@ -2,12 +2,8 @@
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
-class Auth with ChangeNotifier {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  
-  User get getUser {
-    User user = _auth.currentUser;
-    return user;
-  }
-}
+// class Auth with ChangeNotifier {
+//   FirebaseAuth _auth = FirebaseAuth.instance;
+//   User user = _auth.currentUser;
+//   String userId = user.uid;
+// }

@@ -1,5 +1,8 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:yadonor/screens/auth_screen.dart';
 
+import '../main.dart';
 import '../screens/main_screen.dart';
 import '../screens/precautions_screen.dart';
 import '../screens/pre_questionary_screen.dart';
@@ -7,12 +10,13 @@ import '../screens/calendar_screen_view.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget buildListTile(
-      BuildContext context, IconData icon, String title, routeName) {
+      BuildContext context, IconData icon, String title, Function onPressed) {
     return Container(
       height: 60,
       // margin: EdgeInsets.symmetric(vertical: 5),
       child: FlatButton(
-        onPressed: () => Navigator.of(context).pushReplacementNamed(routeName),
+        onPressed: onPressed,
+        // Navigator.of(context).pushReplacementNamed(routeName),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -48,6 +52,11 @@ class MainDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> signOut() async {
+      await FirebaseAuth.instance.signOut();
+      runApp(MyApp());
+    }
+
     return Drawer(
       child: Column(
         children: <Widget>[
@@ -69,14 +78,52 @@ class MainDrawer extends StatelessWidget {
             color: Theme.of(context).primaryColor,
             thickness: 2,
           ),
+          // buildListTile(
+          //     context, Icons.home, 'На главную', MainScreen.routeName),
+          // buildListTile(context, Icons.assignment, 'Анкета донора',
+          //     PreQuestionaryScreen.routeName),
+          // buildListTile(context, Icons.event, 'Календарь донаций',
+          //     CalendarScreenView.routeName),
+          // buildListTile(context, Icons.error, 'Противопоказания к донорству',
+          //     PrecautionsScreen.routeName),
+          // buildListTile(context, Icons.exit_to_app, 'Выход', AuthScreen.routeName),
           buildListTile(
-              context, Icons.home, 'На главную', MainScreen.routeName),
-          buildListTile(context, Icons.assignment, 'Анкета донора',
-              PreQuestionaryScreen.routeName),
-          buildListTile(context, Icons.event, 'Календарь донаций',
-              CalendarScreenView.routeName),
-          buildListTile(context, Icons.error, 'Противопоказания к донорству',
-              PrecautionsScreen.routeName),
+            context,
+            Icons.home,
+            'На главную',
+            () => Navigator.of(context)
+                .pushReplacementNamed(MainScreen.routeName),
+          ),
+          buildListTile(
+            context,
+            Icons.assignment,
+            'Анкета донора',
+            () => Navigator.of(context)
+                .pushReplacementNamed(PreQuestionaryScreen.routeName),
+          ),
+          buildListTile(
+            context,
+            Icons.event,
+            'Календарь донаций',
+            () => Navigator.of(context)
+                .pushReplacementNamed(CalendarScreenView.routeName),
+          ),
+          buildListTile(
+            context,
+            Icons.error,
+            'Противопоказания к донорству',
+            () => Navigator.of(context)
+                .pushReplacementNamed(PrecautionsScreen.routeName),
+          ),
+          buildListTile(
+            context,
+            Icons.exit_to_app,
+            'Выход',
+            () {
+              signOut();
+              Navigator.of(context).pushReplacementNamed(AuthScreen.routeName);
+            },
+          ),
           // buildListTile(
           //     context, Icons.help_outline, 'Как проходит донация', TestScreen),
           // buildListTile(context, Icons.check, 'Рекомендации до и после донации',

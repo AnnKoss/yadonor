@@ -21,7 +21,7 @@ Widget button({
       ),
       textColor: Colors.white,
       color: Theme.of(context).accentColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5), side: BorderSide(color: Colors.black26)),
     ),
   );
 }

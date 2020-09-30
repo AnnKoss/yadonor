@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../providers/calendar_events_provider.dart';
 import '../providers/calendar_screen_provider.dart';
-import '../widgets/event_card.dart';
+import './appointment_card.dart';
 
 class EventListFiltered extends StatefulWidget {
   final FilterType eventsFilter;
@@ -66,40 +66,42 @@ class _EventListFilteredState extends State<EventListFiltered> {
                     children: displayedEvents
                         .map(
                           (appointment) => Card(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 5),
-                              elevation: 3,
-                              child: 
-                              EventCard(appointment),
-                              // ListTile(
-                              //   leading: CircleAvatar(
-                              //     backgroundColor: Theme.of(context).accentColor,
-                              //     radius: 20,
-                              //     child:
-                              //         // Icon(
-                              //         // Icons.event_available,
-                              //         // size: 30,
-                              //         // color: Colors.white,
-                              //         Image(
-                              //       image: AssetImage(
-                              //           'assets/images/blood_drop.png'),
-                              //       height: 25,
-                              //       color: Colors.white,
-                              //     ),
-                              //   ),
-                              //   title: Text(DateFormat('d MMMM y, EEEE', 'ru')
-                              //       .format(appointment.day)),
-                              //   subtitle: Text(appointment.event),
-                              //   trailing: IconButton(
-                              //     icon: Icon(Icons.close),
-                              //     onPressed: () {
-                              //       Provider.of<CalendarEventsProvider>(context,
-                              //               listen: false)
-                              //           .removeEvent(appointment.day);
-                              //     },
-                              //   ),
-                              // ),
-                              ),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 5),
+                            elevation: 3,
+                            child: AppointmentCard(
+                              appointment: appointment,
+                              hasCloseIcon: true,
+                            ),
+                            // ListTile(
+                            //   leading: CircleAvatar(
+                            //     backgroundColor: Theme.of(context).accentColor,
+                            //     radius: 20,
+                            //     child:
+                            //         // Icon(
+                            //         // Icons.event_available,
+                            //         // size: 30,
+                            //         // color: Colors.white,
+                            //         Image(
+                            //       image: AssetImage(
+                            //           'assets/images/blood_drop.png'),
+                            //       height: 25,
+                            //       color: Colors.white,
+                            //     ),
+                            //   ),
+                            //   title: Text(DateFormat('d MMMM y, EEEE', 'ru')
+                            //       .format(appointment.day)),
+                            //   subtitle: Text(appointment.event),
+                            //   trailing: IconButton(
+                            //     icon: Icon(Icons.close),
+                            //     onPressed: () {
+                            //       Provider.of<CalendarEventsProvider>(context,
+                            //               listen: false)
+                            //           .removeEvent(appointment.day);
+                            //     },
+                            //   ),
+                            // ),
+                          ),
                           // ),
                         )
                         .toList(),

@@ -20,6 +20,7 @@ class PreQuestionaryScreen extends StatelessWidget {
       body: Container(
         padding: EdgeInsets.all(15),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             RichText(
               text: TextSpan(
@@ -36,7 +37,7 @@ class PreQuestionaryScreen extends StatelessWidget {
             button(
               context: context,
               onPressed: () => Navigator.of(context)
-                  .pushReplacementNamed(QuestionaryScreen.routeName),
+                  .pushNamed(QuestionaryScreen.routeName),
               buttonText: 'НАЧАТЬ ОПРОС',
             ),
           ],

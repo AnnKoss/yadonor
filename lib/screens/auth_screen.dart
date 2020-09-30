@@ -1,7 +1,9 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../screens/main_screen.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/calendar_events_provider.dart';
+import '../screens/main_screen.dart';
 import '../widgets/button.dart';
 
 // enum AuthMode { Signup, Login }
@@ -18,10 +20,10 @@ class _AuthScreenState extends State<AuthScreen> {
 
   final GlobalKey<FormState> _signUpKey = GlobalKey();
   final GlobalKey<FormState> _loginKey = GlobalKey();
-  Map<String, String> _authData = {
-    'email': '',
-    'password': '',
-  };
+  // Map<String, String> _authData = {
+  //   'email': '',
+  //   'password': '',
+  // };
 
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
@@ -41,13 +43,13 @@ class _AuthScreenState extends State<AuthScreen> {
   Future<void> _submitSignUp() async {
     _signUpKey.currentState.save();
     print(_signUpKey.toString());
-    _authData['email'] = _emailController.text;
-    _authData['password'] = _passwordController.text;
+    // _authData['email'] = _emailController.text;
+    // _authData['password'] = _passwordController.text;
     // _authData['email'] = 'test@gmail.com';
     // _authData['password'] = 'password';
 
-    print(_authData['email']);
-    print(_authData['password']);
+    print(_emailController.text);
+    print(_passwordController.text);
 
     if (!_signUpKey.currentState.validate()) {
       // invalid!
@@ -58,17 +60,16 @@ class _AuthScreenState extends State<AuthScreen> {
     User user;
     try {
       UserCredential authResult = await _auth.createUserWithEmailAndPassword(
-        email: _authData['email'],
-        password: _authData['password'],
+        email: _emailController.text,
+        password: _passwordController.text,
       );
       user = authResult.user;
     } on FirebaseAuthException catch (error) {
       if (error.code == 'email-already-in-use') {
-        print('Аккаунт с таким e-mail уже существует');
+        print('Аккаунт с таким e-mail уже существует'); //ToDo: show user error message
       }
-      print('signup failed');
-      print(error.code);
-    } finally {
+      print('signup failed: ' + error.code);
+    } finally { //ToDo: remove finally
       if (user != null) {
         Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
         
@@ -92,11 +93,11 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Future<void> _submitLogin() async {
-    _authData['email'] = _emailController.text;
-    _authData['password'] = _passwordController.text;
+    // _authData['email'] = _emailController.text;
+    // _authData['password'] = _passwordController.text;
 
-    print(_authData['email']);
-    print(_authData['password']);
+    print(_emailController.text);
+    print(_passwordController.text);
 
     if (!_loginKey.currentState.validate()) {
       // invalid!
@@ -108,14 +109,16 @@ class _AuthScreenState extends State<AuthScreen> {
     UserCredential authResult;
     try {
       authResult = await _auth.signInWithEmailAndPassword(
-        email: _authData['email'],
-        password: _authData['password'],
+        email: _emailController.text,
+        password: _passwordController.text,
       );
     } catch (error) {
       print(error.code);
     } finally {
       if (authResult != null) {
         Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
+        // Provider.of<CalendarEventsProvider>(context, listen: false).fetchEvents().then((_) => print('events fetched'));
+        print('fetchEvents');
       } else {
         showDialog(
           context: context,
@@ -394,3 +397,5 @@ Widget _buildTextFormField(TextFormField textFormField) {
     child: textFormField,
   );
 }
+
+//ToDo: create theme file with build-blabla

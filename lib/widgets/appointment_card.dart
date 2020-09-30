@@ -4,10 +4,14 @@ import 'package:provider/provider.dart';
 
 import '../providers/calendar_events_provider.dart';
 
-class EventCard extends StatelessWidget {
+class AppointmentCard extends StatelessWidget {
   final Appointment appointment;
+  final bool hasCloseIcon;
 
-  EventCard(this.appointment);
+  AppointmentCard({
+    @required this.appointment,
+    this.hasCloseIcon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +53,10 @@ class EventCard extends StatelessWidget {
       ),
       title: Text(DateFormat('d MMMM y, EEEE', 'ru').format(appointment.day)),
       subtitle: Text(appointment.event),
-      trailing: IconButton(
+      trailing: hasCloseIcon ? IconButton(
         icon: Icon(Icons.close),
         onPressed: onRemoveButtonPressed,
-      ),
+      ) : null,
     );
   }
 }
