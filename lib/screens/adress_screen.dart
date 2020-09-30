@@ -37,7 +37,7 @@ class _AdressScreenState extends State<AdressScreen> {
             height: 300,
             child: GoogleMap(
               onMapCreated: _onMapCreated,
-              markers: Set<Marker>.of(markers),
+              // markers: Set<Marker>.of(markers),
               initialCameraPosition: CameraPosition(
                 target: _center,
                 zoom: 10.0,
