@@ -2,7 +2,8 @@
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/calendar_events_provider.dart';
+import '../providers/calendar_appointments_provider.dart';
+import '../models/appointment-item.dart';
 
 class AppointmentCard extends StatelessWidget {
   final Appointment appointment;
@@ -18,8 +19,8 @@ class AppointmentCard extends StatelessWidget {
     Future<void> onRemoveButtonPressed() async {
       print('try to delete');
       try {
-        Provider.of<CalendarEventsProvider>(context, listen: false)
-            .removeEvent(appointment.day);
+        Provider.of<CalendarAppointmentsProvider>(context, listen: false)
+            .removeAppointment(appointment.day);
       } catch (error) {
         showDialog(
           context: context,
@@ -42,7 +43,7 @@ class AppointmentCard extends StatelessWidget {
         radius: 20,
         child:
             // Icon(
-            // Icons.event_available,
+            // Icons.appointment_available,
             // size: 30,
             // color: Colors.white,
             Image(
@@ -52,7 +53,7 @@ class AppointmentCard extends StatelessWidget {
         ),
       ),
       title: Text(DateFormat('d MMMM y, EEEE', 'ru').format(appointment.day)),
-      subtitle: Text(appointment.event),
+      subtitle: Text(appointment.appointment),
       trailing: hasCloseIcon ? IconButton(
         icon: Icon(Icons.close),
         onPressed: onRemoveButtonPressed,

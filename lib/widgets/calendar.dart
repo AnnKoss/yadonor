@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../providers/calendar_events_provider.dart';
+import '../providers/calendar_appointments_provider.dart';
 import '../providers/calendar_screen_provider.dart';
 import '../widgets/button.dart';
 
@@ -15,7 +15,7 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
   CalendarController _calendarController;
-  var thisMonthEvents = {};
+  var thisMonthAppointments = {};
 
   bool isCorrectDate = true;
 
@@ -35,12 +35,12 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    final calendarEventsData = Provider.of<CalendarEventsProvider>(context);
-    final Map<DateTime, List> calendarEvents = Map.fromIterable(
-        calendarEventsData.events,
+    final calendarAppointmentsData = Provider.of<CalendarAppointmentsProvider>(context);
+    final Map<DateTime, List> calendarAppointments = Map.fromIterable(
+        calendarAppointmentsData.appointments,
         key: (appointment) => appointment.day,
-        value: (appointment) => [appointment.event]);
-    print(calendarEvents);
+        value: (appointment) => [appointment.appointment]);
+    print(calendarAppointments);
 
     return TableCalendar(
       calendarController: _calendarController,
@@ -57,13 +57,13 @@ class _CalendarState extends State<Calendar> {
       startingDayOfWeek: StartingDayOfWeek.monday,
       locale: 'ru_Ru',
       onDaySelected: Provider.of<CalendarScreenProvider>(context).selectDay,
-      events: calendarEvents,
+      events: calendarAppointments,
       rowHeight: 40,
       onVisibleDaysChanged: (from, to, format) {
         Provider.of<CalendarScreenProvider>(context, listen: false)
             .changeVisibleDates(from);
         Provider.of<CalendarScreenProvider>(context, listen: false)
-            .getCurrentMonthEvents();
+            .getCurrentMonthAppointments();
         // print(from);
       },
     );

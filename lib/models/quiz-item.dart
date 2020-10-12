@@ -2,6 +2,10 @@
 
 enum AnswerResult {next, fail, skip}  
 
+///Single question info item in donor questionnaire questionary_screen.dart. 
+///Holds the text of the question [questionText] and possible answers [answer1], [answer2], 
+///function [onChoose] that decides whether to pass to the next question or finish and show [failText].
+///Success result is managed separately.
 class QuizItem {
   final String questionText;
   final String answer1;
@@ -17,12 +21,6 @@ class QuizItem {
     this.failText,
   );
 }
-
-
-// const int NEXT = 9999;
-// const int FAIL = 9998;
-// const int SKIP = 9997;
-// const int SUCCESS = 9996;
 
 AnswerResult firstAllow(int i) {
   if (i == 0) {

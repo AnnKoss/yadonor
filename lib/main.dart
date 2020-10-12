@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 // import 'package:yadonor/providers/calendar_screen_provider.dart';
 
-import './providers/calendar_events_provider.dart';
+import 'providers/calendar_appointments_provider.dart';
 
 import './screens/main_screen.dart';
 import './screens/calendar_add_screen.dart';
@@ -27,16 +27,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    // Widget homeScreen;
-
-    // FirebaseAuth.instance.authStateChanges().listen((User user) {
-    //   if (user == null) {
-    //     homeScreen = AuthScreen();
-    //   } else {
-    //     homeScreen = MainScreen();
-    //   }
-    // });
-
     return FutureBuilder(
       future: Firebase.initializeApp(
         name: 'yadonor-app',
@@ -66,10 +56,9 @@ class DonorApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final User user = _auth.currentUser;
-    // final String userId = user.uid;
 
-    return ListenableProvider<CalendarEventsProvider>(
-      create: (ctx) => CalendarEventsProvider(),
+    return ListenableProvider<CalendarAppointmentsProvider>(
+      create: (ctx) => CalendarAppointmentsProvider(),
       child: MaterialApp(
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
@@ -88,20 +77,16 @@ class DonorApp extends StatelessWidget {
           appBarTheme: AppBarTheme(
             color: Colors.white,
             iconTheme: IconThemeData(
-              color: const Color(0xff00608a),
+              color: Theme.of(context).primaryColor,
             ),
           ),
           textTheme: TextTheme(
-            title: TextStyle(
-              color: const Color(0xff00608a),
+            headline1: TextStyle(
+              color: Theme.of(context).primaryColor,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
-            subhead: TextStyle(
-              fontSize: 21,
-              // height: 3,
-            ),
-            body1: TextStyle(fontSize: 18),
+            bodyText1: TextStyle(fontSize: 18),
           ),
           buttonTheme: ButtonThemeData(
             buttonColor: Theme.of(context).accentColor,
@@ -109,7 +94,6 @@ class DonorApp extends StatelessWidget {
           dividerColor: Theme.of(context).primaryColor,
         ),
         home: (user != null) ? MainScreen() : AuthScreen(),
-        // home: AdressScreen(),
         routes: {
           MainScreen.routeName: (ctx) => MainScreen(),
           AuthScreen.routeName: (ctx) => AuthScreen(),
@@ -120,7 +104,6 @@ class DonorApp extends StatelessWidget {
           CalendarScreenView.routeName: (ctx) => CalendarScreenView(),
           AdressScreen.routeName: (ctx) => AdressScreen(),
           CalendarAddScreen.routeName: (ctx) => CalendarAddScreen(),
-          // SuccessResult.routeName: (ctx) => SuccessResult(),
         },
       ),
     );

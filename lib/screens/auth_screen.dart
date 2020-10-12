@@ -2,7 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/calendar_events_provider.dart';
+import '../providers/calendar_appointments_provider.dart';
 import '../screens/main_screen.dart';
 import '../widgets/button.dart';
 

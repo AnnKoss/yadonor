@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../providers/calendar_events_provider.dart';
+import '../providers/calendar_appointments_provider.dart';
 
 import './calendar_screen_view.dart';
 import '../screens/pre_questionary_screen.dart';
@@ -49,8 +49,8 @@ class _MainScreenState extends State<MainScreen> {
               child: Card(
                 margin: EdgeInsets.symmetric(vertical: 10),
                 elevation: 3,
-                child: Consumer<CalendarEventsProvider>(
-                  builder: (context, calendarEventsData, child) {
+                child: Consumer<CalendarAppointmentsProvider>(
+                  builder: (context, calendarAppointmentsData, child) {
                     return Column(
                       children: <Widget>[
                         Container(
@@ -61,17 +61,17 @@ class _MainScreenState extends State<MainScreen> {
                           padding: EdgeInsets.only(top: 10),
                           width: double.infinity,
                         ),
-                        (Provider.of<CalendarEventsProvider>(context).isFetchEventsLoading)
+                        (Provider.of<CalendarAppointmentsProvider>(context).isFetchAppointmentsLoading)
                             ? Container(
                                 padding: EdgeInsets.symmetric(vertical: 5),
                                 child: CircularProgressIndicator(),
                               )
-                            : (calendarEventsData.getNearestAppointment() !=
+                            : (calendarAppointmentsData.getNearestAppointment() !=
                                     null)
                                 ? Container(
                                     margin: EdgeInsets.all(10),
                                     child: AppointmentCard(
-                                      appointment: calendarEventsData
+                                      appointment: calendarAppointmentsData
                                           .getNearestAppointment(),
                                       hasCloseIcon: false,
                                     ),

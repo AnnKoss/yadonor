@@ -2,56 +2,64 @@
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import './calendar_events_provider.dart';
+import 'calendar_appointments_provider.dart';
 
-//State provider for all child widgets in calendar_screen.dart
+import '../models/appointment-item.dart';
+
+enum FilterType { future, past, current } ///Chooses whether to show events of the current month, all the future or all the past ones.
+
+///State provider for all child widgets in calendar_screen.dart
 class CalendarScreenProvider with ChangeNotifier {
-  List<Appointment> events;
+  List<Appointment> appointments;
 
-  CalendarScreenProvider(this.events);
+  CalendarScreenProvider(this.appointments);
 
   DateTime firstVisibleDate = DateTime(
+    /// The first date visible on the screen of current month. Used for changing displayed current month appointments in appointment_list_filtered.dart.
       DateTime.now().year,
       DateTime.now().month,
-      1); // The first date visible on the screen of current month. Used for changing displayed current month events in event_list_filtered.dart
+      1); 
 
-  bool isAvaliableDate = true; //is the date in the future (true) or in the past
+  ///is the [selectedDay] in the future (true) or in the past
+  bool isFutureDate = true; 
 
-  List<Appointment> getCurrentMonthEvents() {
-    // List<Appointment> events = Provider.of<CalendarEventsProvider>(context).events;
-    return events.where(
+  List<Appointment> getCurrentMonthAppointments() {
+    /// Appointments of current month.
+    return appointments.where(
       (entry) {
-        var selectedEventMonth = DateFormat.yM().format(entry.day);
-
+        String selectedAppointmentMonth = DateFormat.yM().format(entry.day);
         int year = firstVisibleDate.add(Duration(days: 15)).year;
         int month = firstVisibleDate.add(Duration(days: 15)).month;
-        var currentMonth = DateFormat.yM().format(DateTime(year, month));
-        return selectedEventMonth == currentMonth;
+        String currentMonth = DateFormat.yM().format(DateTime(year, month));
+
+        return selectedAppointmentMonth == currentMonth;
       },
     ).toList();
-  } // Events of current month
+  } 
 
-  List<Appointment> getFutureEvents() {
-    // List<Appointment> events = Provider.of<CalendarEventsProvider>(context).events;
-    return events.where(
+  List<Appointment> getFutureAppointments() {
+    ///Future appointments, counted since today.
+    return appointments.where(
       (entry) {
         return entry.day.isAfter(DateTime.now().subtract(Duration(days: 1)));
       },
     ).toList();
   }
 
-  List<Appointment> getPastEvents() {
-    // List<Appointment> events = Provider.of<CalendarEventsProvider>(context).events;
-    return events.where(
+  List<Appointment> getPastAppointments() {
+    ///Past appointments.
+    return appointments.where(
       (entry) {
         return entry.day.isBefore(DateTime.now());
       },
     ).toList();
   }
 
-  DateTime selectedDay; // Day selected on the calendar screen
+  /// Day selected on the calendar screen
+  DateTime selectedDay; 
 
-  void selectDay(DateTime day, List events) {
+  void selectDay(DateTime day, List appointments) {
+    ///A handler for [onDaySelected] property of Calendar widget.
     selectedDay = day;
     selectedDayCheck(day);
     print('day selected');
@@ -60,58 +68,58 @@ class CalendarScreenProvider with ChangeNotifier {
   }
 
   void changeVisibleDates(DateTime from) {
+    ///Changes displayed current month appointments in appointment_list_filtered.dart.
     firstVisibleDate = from;
+    
     notifyListeners();
   }
 
   void selectedDayCheck(DateTime day) {
+    ///Checks if [selectedDay] is in the past or in the future.
     if (day.isAfter(DateTime.now().subtract(Duration(days: 1)))) {
-      // print('Not able to pick date in the past');
-      isAvaliableDate = true;
+      isFutureDate = true;
     } else {
-      // print('Choose the date!');
-
-      isAvaliableDate = false;
+      isFutureDate = false;
     }
     notifyListeners();
   }
 
-  List<Appointment> displayedEvents;
+  List<Appointment> displayedAppointments;
 
-  void displayFilteredEvents(FilterType filter) {
-    // List<Appointment> events = Provider.of<CalendarEventsProvider>(context).events;
+  void displayFilteredAppointments(FilterType filter) {
+    ///Displays list of future, past or current month [Appointment] in appointment_list_filtered.dart according to [FilterType].
     if (filter == FilterType.current) {
-      displayedEvents = events.where(
+      displayedAppointments = appointments.where(
         (entry) {
-          var selectedEventMonth = DateFormat.yM().format(entry.day);
+          var selectedAppointmentMonth = DateFormat.yM().format(entry.day);
 
           int year = firstVisibleDate.add(Duration(days: 15)).year;
           int month = firstVisibleDate.add(Duration(days: 15)).month;
           var currentMonth = DateFormat.yM().format(DateTime(year, month));
-          return selectedEventMonth == currentMonth;
+          return selectedAppointmentMonth == currentMonth;
         },
       ).toList();
     } else if (filter == FilterType.future) {
-      displayedEvents = events.where(
+      displayedAppointments = appointments.where(
         (entry) {
           return entry.day.isAfter(DateTime.now().subtract(Duration(days: 1)));
         },
       ).toList();
     } else if (filter == FilterType.past) {
-      displayedEvents = events.where(
+      displayedAppointments = appointments.where(
         (entry) {
           return entry.day.isBefore(DateTime.now());
         },
       ).toList();
     } else {
-      displayedEvents = events.where(
+      displayedAppointments = appointments.where(
         (entry) {
-          var selectedEventMonth = DateFormat.yM().format(entry.day);
+          var selectedAppointmentMonth = DateFormat.yM().format(entry.day);
 
           int year = firstVisibleDate.add(Duration(days: 15)).year;
           int month = firstVisibleDate.add(Duration(days: 15)).month;
           var currentMonth = DateFormat.yM().format(DateTime(year, month));
-          return selectedEventMonth == currentMonth;
+          return selectedAppointmentMonth == currentMonth;
         },
       ).toList();
     }

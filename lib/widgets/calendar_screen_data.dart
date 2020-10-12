@@ -6,10 +6,10 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../providers/calendar_events_provider.dart';
+import '../providers/calendar_appointments_provider.dart';
 import '../providers/calendar_screen_provider.dart';
 
-import '../widgets/event_list_filtered.dart';
+import 'appointment_list_filtered.dart';
 import '../widgets/calendar.dart';
 import '../widgets/button.dart';
 import '../screens/calendar_add_screen.dart';
@@ -24,7 +24,7 @@ class CalendarScreenData extends StatefulWidget {
 }
 
 class _CalendarScreenDataState extends State<CalendarScreenData> {
-  FilterType eventsFilter = FilterType.current;
+  FilterType appointmentsFilter = FilterType.current;
   var _isLoading = false;
 
   @override
@@ -33,15 +33,15 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
 
     void selectFilter(FilterType result) {
       setState(() {
-        eventsFilter = result;
+        appointmentsFilter = result;
       });
-      print(eventsFilter);
-      if (eventsFilter == FilterType.current) {
+      print(appointmentsFilter);
+      if (appointmentsFilter == FilterType.current) {
         Provider.of<CalendarScreenProvider>(context, listen: false)
             .changeVisibleDates(
                 DateTime(DateTime.now().year, DateTime.now().month, 1));
         Provider.of<CalendarScreenProvider>(context, listen: false)
-            .getCurrentMonthEvents();
+            .getCurrentMonthAppointments();
       }
     }
 
@@ -50,7 +50,7 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
         _isLoading = true;
       });
       try {
-        Provider.of<CalendarEventsProvider>(context, listen: false).addEvent(
+        Provider.of<CalendarAppointmentsProvider>(context, listen: false).addAppointment(
             Provider.of<CalendarScreenProvider>(context, listen: false)
                 .selectedDay);
       } catch (error) {
@@ -105,7 +105,7 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
         ],
       ),
       drawer: MainDrawer(),
-      body: (eventsFilter == FilterType.current)
+      body: (appointmentsFilter == FilterType.current)
           ? (!_isLoading)
               ? Column(
                   children: <Widget>[
@@ -116,7 +116,7 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
                     ),
                     Flexible(
                       fit: FlexFit.loose,
-                      child: EventListFiltered(eventsFilter),
+                      child: AppointmentListFiltered(appointmentsFilter),
                     ),
                   ],
                 )
@@ -131,7 +131,7 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
                       fit: FlexFit.loose,
                       child: Stack(
                         children: <Widget>[
-                          EventListFiltered(eventsFilter),
+                          AppointmentListFiltered(appointmentsFilter),
                           Container(
                               width: double.infinity,
                               height: double.infinity,
@@ -143,12 +143,12 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
                   ],
                 )
           : (!_isLoading)
-              ? EventListFiltered(eventsFilter)
+              ? AppointmentListFiltered(appointmentsFilter)
               : Flexible(
                   fit: FlexFit.loose,
                   child: Stack(
                     children: <Widget>[
-                      EventListFiltered(eventsFilter),
+                      AppointmentListFiltered(appointmentsFilter),
                       Center(child: CircularProgressIndicator()),
                     ],
                   ),
@@ -164,7 +164,7 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
             onAddButtonPressed,
         // : null,
         backgroundColor:
-            Provider.of<CalendarScreenProvider>(context).isAvaliableDate
+            Provider.of<CalendarScreenProvider>(context).isFutureDate
                 ? Theme.of(context).accentColor
                 : Color(0xffed6056),
         elevation: 5,

@@ -2,60 +2,61 @@
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-import '../providers/calendar_events_provider.dart';
+import '../providers/calendar_appointments_provider.dart';
 import '../providers/calendar_screen_provider.dart';
-import './appointment_card.dart';
+import '../models/appointment-item.dart';
+import 'appointment_card.dart';
 
-class EventListFiltered extends StatefulWidget {
-  final FilterType eventsFilter;
-  EventListFiltered(this.eventsFilter);
+class AppointmentListFiltered extends StatefulWidget {
+  final FilterType appointmentsFilter;
+  AppointmentListFiltered(this.appointmentsFilter);
 
   @override
-  _EventListFilteredState createState() => _EventListFilteredState();
+  _AppointmentListFilteredState createState() => _AppointmentListFilteredState();
 }
 
-class _EventListFilteredState extends State<EventListFiltered> {
+class _AppointmentListFilteredState extends State<AppointmentListFiltered> {
   @override
   Widget build(BuildContext context) {
-    // final calendarEventsData = Provider.of<CalendarEventsProvider>(context);
+    // final calendarAppointmentsData = Provider.of<CalendarAppointmentsProvider>(context);
     final calendarScreenData = Provider.of<CalendarScreenProvider>(context);
-    // calendarScreenData.displayFilteredEvents(widget.eventsFilter);
+    // calendarScreenData.displayFilteredAppointments(widget.appointmentsFilter);
 
-    List<Appointment> displayedEvents = calendarScreenData.displayedEvents;
+    List<Appointment> displayedAppointments = calendarScreenData.displayedAppointments;
 
-    String eventsText = 'Донации в этом месяце:';
-    // FilterType eventsFilter = calendarData.eventsFilter;
+    String appointmentsText = 'Донации в этом месяце:';
+    // FilterType appointmentFilter = calendarData.appointmentFilter;
 
-    switch (widget.eventsFilter) {
+    switch (widget.appointmentsFilter) {
       case FilterType.future:
-        displayedEvents = calendarScreenData.getFutureEvents();
-        eventsText = 'Предстоящие донации:';
-        // print(displayedEvents);
+        displayedAppointments = calendarScreenData.getFutureAppointments();
+        appointmentsText = 'Предстоящие донации:';
+        // print(displayedAppointments);
         break;
       case FilterType.past:
-        displayedEvents = calendarScreenData.getPastEvents();
-        eventsText = 'Прошедшие донации:';
-        // print(displayedEvents);
+        displayedAppointments = calendarScreenData.getPastAppointments();
+        appointmentsText = 'Прошедшие донации:';
+        // print(displayedAppointments);
         break;
       case FilterType.current:
-        displayedEvents = calendarScreenData.getCurrentMonthEvents();
-        // print(displayedEvents);
+        displayedAppointments = calendarScreenData.getCurrentMonthAppointments();
+        // print(displayedAppointments);
         break;
       default:
-        displayedEvents = calendarScreenData.getCurrentMonthEvents();
-        eventsText = 'Донации в этом месяце:';
-        // print(displayedEvents);
+        displayedAppointments = calendarScreenData.getCurrentMonthAppointments();
+        appointmentsText = 'Донации в этом месяце:';
+        // print(displayedAppointments);
         break;
     }
 
-    print('displayedEvents: ' + displayedEvents.toString());
+    print('displayedAppointments: ' + displayedAppointments.toString());
 
-    return (displayedEvents.isNotEmpty)
+    return (displayedAppointments.isNotEmpty)
         ? Column(
             children: <Widget>[
               Container(
                 child: Text(
-                  eventsText,
+                  appointmentsText,
                   style: TextStyle(fontSize: 20),
                 ),
                 margin: EdgeInsets.only(top: 10),
@@ -63,7 +64,7 @@ class _EventListFilteredState extends State<EventListFiltered> {
               Expanded(
                 child: Scrollbar(
                   child: ListView(
-                    children: displayedEvents
+                    children: displayedAppointments
                         .map(
                           (appointment) => Card(
                             margin: EdgeInsets.symmetric(
@@ -95,9 +96,9 @@ class _EventListFilteredState extends State<EventListFiltered> {
                             //   trailing: IconButton(
                             //     icon: Icon(Icons.close),
                             //     onPressed: () {
-                            //       Provider.of<CalendarEventsProvider>(context,
+                            //       Provider.of<CalendarAppointmentsProvider>(context,
                             //               listen: false)
-                            //           .removeEvent(appointment.day);
+                            //           .removeAppointment(appointment.day);
                             //     },
                             //   ),
                             // ),
