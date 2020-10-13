@@ -1,12 +1,12 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:yadonor/screens/auth_screen.dart';
 
-import '../main.dart';
-import '../screens/main_screen.dart';
-import '../screens/precautions_screen.dart';
-import '../screens/pre_questionary_screen.dart';
-import '../screens/calendar_screen_view.dart';
+import 'package:yadonor/main.dart';
+import 'package:yadonor/screens/auth_screen.dart';
+import 'package:yadonor/screens/main_screen.dart';
+import 'package:yadonor/screens/precautions_screen.dart';
+import 'package:yadonor/screens/pre_questionary_screen.dart';
+import 'package:yadonor/screens/calendar_screen_view.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget buildListTile(

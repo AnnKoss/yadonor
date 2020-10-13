@@ -1,17 +1,14 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../providers/calendar_appointments_provider.dart';
-
-import './calendar_screen_view.dart';
-import '../screens/pre_questionary_screen.dart';
-import '../screens/adress_screen.dart';
-import '../widgets/button.dart';
-import '../widgets/main_screen_button.dart';
-import '../widgets/main_drawer.dart';
-import '../widgets/appointment_card.dart';
+import 'package:yadonor/providers/calendar_appointments_provider.dart';
+import 'package:yadonor/screens/calendar_screen_view.dart';
+import 'package:yadonor/screens/pre_questionary_screen.dart';
+import 'package:yadonor/screens/adress_screen.dart';
+import 'package:yadonor/widgets/main_screen_button.dart';
+import 'package:yadonor/widgets/main_drawer.dart';
+import 'package:yadonor/widgets/appointment_card.dart';
 
 class MainScreen extends StatefulWidget {
   static const routeName = '/main';

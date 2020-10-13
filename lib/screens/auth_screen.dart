@@ -1,10 +1,8 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/provider.dart';
 
-import '../providers/calendar_appointments_provider.dart';
-import '../screens/main_screen.dart';
-import '../widgets/button.dart';
+import 'package:yadonor/screens/main_screen.dart';
+import 'package:yadonor/widgets/button.dart';
 
 // enum AuthMode { Signup, Login }
 

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/main_drawer.dart';
-import '../models/quiz-item.dart';
-import '../widgets/answer_option.dart';
-import '../widgets/question_text.dart';
+import 'package:yadonor/models/quiz-item.dart';
+import 'package:yadonor/screens/questionary_result_screen.dart';
+import 'package:yadonor/widgets/answer_option.dart';
+import 'package:yadonor/widgets/question_text.dart';
+import 'package:yadonor/widgets/main_drawer.dart';
 
-import '../screens/questionary_result_screen.dart';
 
 class QuestionaryScreen extends StatefulWidget {
   static const routeName = '/questionary';

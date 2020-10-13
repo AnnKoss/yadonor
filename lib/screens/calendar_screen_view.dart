@@ -1,9 +1,9 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/calendar_appointments_provider.dart';
-import '../providers/calendar_screen_provider.dart';
-import '../widgets/calendar_screen_data.dart';
+import 'package:yadonor/providers/calendar_appointments_provider.dart';
+import 'package:yadonor/providers/calendar_screen_provider.dart';
+import 'package:yadonor/widgets/calendar_screen_data.dart';
 
 class CalendarScreenView extends StatelessWidget {
   static const routeName = '/calendar';

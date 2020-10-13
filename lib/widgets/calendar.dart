@@ -4,9 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../providers/calendar_appointments_provider.dart';
-import '../providers/calendar_screen_provider.dart';
-import '../widgets/button.dart';
+import 'package:yadonor/providers/calendar_appointments_provider.dart';
+import 'package:yadonor/providers/calendar_screen_provider.dart';
 
 class Calendar extends StatefulWidget {
   @override

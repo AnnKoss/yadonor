@@ -1,6 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 
-import '../widgets/main_drawer.dart';
+import 'package:yadonor/widgets/main_drawer.dart';
 
 class CalendarAddScreen extends StatefulWidget {
   static const routeName = '/calendar-add';

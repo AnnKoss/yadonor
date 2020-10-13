@@ -1,11 +1,9 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart'; 
 
-import '../providers/calendar_appointments_provider.dart';
-import '../providers/calendar_screen_provider.dart';
-import '../models/appointment-item.dart';
-import 'appointment_card.dart';
+import 'package:yadonor/models/appointment-item.dart';
+import 'package:yadonor/providers/calendar_screen_provider.dart';
+import 'package:yadonor/widgets/appointment_card.dart';
 
 class AppointmentListFiltered extends StatefulWidget {
   final FilterType appointmentsFilter;
