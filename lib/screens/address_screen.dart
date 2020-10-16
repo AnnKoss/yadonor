@@ -3,16 +3,16 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:yadonor/widgets/main_drawer.dart';
-import 'package:yadonor/widgets/address_list.dart';
+import 'package:yadonor/widgets/address_listView.dart';
 
-class AdressScreen extends StatefulWidget {
+class AddressScreen extends StatefulWidget {
   static const routeName = '/adress';
 
   @override
-  _AdressScreenState createState() => _AdressScreenState();
+  _AddressScreenState createState() => _AddressScreenState();
 }
 
-class _AdressScreenState extends State<AdressScreen> {
+class _AddressScreenState extends State<AddressScreen> {
   GoogleMapController mapController;
 
   final LatLng _center = const LatLng(59.9311, 30.3609);
@@ -27,7 +27,7 @@ class _AdressScreenState extends State<AdressScreen> {
       appBar: AppBar(
         title: Text(
           'АДРЕСА ОТДЕЛЕНИЙ ПЕРЕЛИВАНИЯ КРОВИ',
-          style: Theme.of(context).textTheme.title,
+          style: Theme.of(context).textTheme.headline1,
         ),
       ),
       drawer: MainDrawer(),

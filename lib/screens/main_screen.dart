@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:yadonor/providers/calendar_appointments_provider.dart';
 import 'package:yadonor/screens/calendar_screen_view.dart';
 import 'package:yadonor/screens/pre_questionary_screen.dart';
-import 'package:yadonor/screens/adress_screen.dart';
+import 'package:yadonor/screens/address_screen.dart';
 import 'package:yadonor/widgets/main_screen_button.dart';
 import 'package:yadonor/widgets/main_drawer.dart';
 import 'package:yadonor/widgets/appointment_card.dart';
@@ -24,11 +24,10 @@ class _MainScreenState extends State<MainScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      // backgroundColor: Theme.of(context).primaryColorLight,
       appBar: AppBar(
         title: Text(
           'DONOR APP',
-          style: Theme.of(context).textTheme.title,
+          style: Theme.of(context).textTheme.headline1,
         ),
       ),
       drawer: MainDrawer(),
@@ -58,12 +57,14 @@ class _MainScreenState extends State<MainScreen> {
                           padding: EdgeInsets.only(top: 10),
                           width: double.infinity,
                         ),
-                        (Provider.of<CalendarAppointmentsProvider>(context).isFetchAppointmentsLoading)
+                        (Provider.of<CalendarAppointmentsProvider>(context)
+                                .isFetchAppointmentsLoading)
                             ? Container(
                                 padding: EdgeInsets.symmetric(vertical: 5),
                                 child: CircularProgressIndicator(),
                               )
-                            : (calendarAppointmentsData.getNearestAppointment() !=
+                            : (calendarAppointmentsData
+                                        .getNearestAppointment() !=
                                     null)
                                 ? Container(
                                     margin: EdgeInsets.all(10),
@@ -100,18 +101,9 @@ class _MainScreenState extends State<MainScreen> {
             ),
             mainScreenButton(
               onPressed: () => Navigator.of(context)
-                  .pushReplacementNamed(AdressScreen.routeName),
+                  .pushReplacementNamed(AddressScreen.routeName),
               buttonText: 'АДРЕСА',
             ),
-            // Container(
-            //   margin: EdgeInsets.only(left: 10),
-            //   child: Image(
-            //       image: AssetImage('assets/images/heartbeat.png'),
-            //       height: 120,
-            //       width: double.infinity,
-            //       color: Theme.of(context).accentColor,
-            //     ),
-            // ),
           ],
         ),
       ),

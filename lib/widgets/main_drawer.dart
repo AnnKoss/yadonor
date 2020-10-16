@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:yadonor/main.dart';
 import 'package:yadonor/screens/auth_screen.dart';
 import 'package:yadonor/screens/main_screen.dart';
+import 'package:yadonor/screens/address_screen.dart';
 import 'package:yadonor/screens/precautions_screen.dart';
 import 'package:yadonor/screens/pre_questionary_screen.dart';
 import 'package:yadonor/screens/calendar_screen_view.dart';
@@ -13,10 +14,8 @@ class MainDrawer extends StatelessWidget {
       BuildContext context, IconData icon, String title, Function onPressed) {
     return Container(
       height: 60,
-      // margin: EdgeInsets.symmetric(vertical: 5),
       child: FlatButton(
         onPressed: onPressed,
-        // Navigator.of(context).pushReplacementNamed(routeName),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -78,15 +77,6 @@ class MainDrawer extends StatelessWidget {
             color: Theme.of(context).primaryColor,
             thickness: 2,
           ),
-          // buildListTile(
-          //     context, Icons.home, 'На главную', MainScreen.routeName),
-          // buildListTile(context, Icons.assignment, 'Анкета донора',
-          //     PreQuestionaryScreen.routeName),
-          // buildListTile(context, Icons.event, 'Календарь донаций',
-          //     CalendarScreenView.routeName),
-          // buildListTile(context, Icons.error, 'Противопоказания к донорству',
-          //     PrecautionsScreen.routeName),
-          // buildListTile(context, Icons.exit_to_app, 'Выход', AuthScreen.routeName),
           buildListTile(
             context,
             Icons.home,
@@ -117,6 +107,13 @@ class MainDrawer extends StatelessWidget {
           ),
           buildListTile(
             context,
+            Icons.location_on,
+            'Адреса станций переливания крови',
+            () => Navigator.of(context)
+                .pushReplacementNamed(AddressScreen.routeName),
+          ),
+          buildListTile(
+            context,
             Icons.exit_to_app,
             'Выход',
             () {
@@ -124,12 +121,6 @@ class MainDrawer extends StatelessWidget {
               Navigator.of(context).pushReplacementNamed(AuthScreen.routeName);
             },
           ),
-          // buildListTile(
-          //     context, Icons.help_outline, 'Как проходит донация', TestScreen),
-          // buildListTile(context, Icons.check, 'Рекомендации до и после донации',
-          //     TestScreen),
-          // buildListTile(context, Icons.location_on,
-          //     'Адреса станций переливания крови', TestScreen),
         ],
       ),
     );

@@ -27,7 +27,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final FocusNode _passwordFocus = FocusNode();
   final FocusNode _confirmPasswordFocus = FocusNode();
 
-  _fieldFocusChange(
+  void _fieldFocusChange(
       BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
@@ -349,40 +349,6 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 }
-
-// class SignIn extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: <Widget>[
-//         SizedBox(height: 30),
-//         _buildEmailTextFormField('E-mail', Icons.email),
-//         _buildEmailTextFormField('Пароль', Icons.lock),
-//         SizedBox(height: 20),
-//         button(context: context, buttonText: 'Войти', onPressed: () {}),
-//       ],
-//     );
-//   }
-// }
-
-// class SignUp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: <Widget>[
-//         SizedBox(height: 30),
-//         _buildEmailTextFormField('E-mail', Icons.email),
-//         _buildEmailTextFormField('Пароль', Icons.lock),
-//         _buildEmailTextFormField('Подтвердите пароль', Icons.lock),
-//         SizedBox(height: 20),
-//         button(
-//             context: context,
-//             buttonText: 'Зарегистрироваться',
-//             onPressed: () {}),
-//       ],
-//     );
-//   }
-// }
 
 Widget _buildTextFormField(TextFormField textFormField) {
   return Container(

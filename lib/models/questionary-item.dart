@@ -6,14 +6,14 @@ enum AnswerResult {next, fail, skip}
 ///Holds the text of the question [questionText] and possible answers [answer1], [answer2], 
 ///function [onChoose] that decides whether to pass to the next question or finish and show [failText].
 ///Success result is managed separately.
-class QuizItem {
+class QuestionaryItem {
   final String questionText;
   final String answer1;
   final String answer2;
   final OnChoose onChoose;
   final String failText;
 
-  QuizItem(
+  QuestionaryItem(
     this.questionText,
     this.answer1,
     this.answer2,

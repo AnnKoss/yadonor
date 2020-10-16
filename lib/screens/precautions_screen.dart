@@ -14,7 +14,7 @@ class PrecautionsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'ПРОТИВОПОКАЗАНИЯ К ДОНОРСТВУ',
-          style: Theme.of(context).textTheme.title,
+          style: Theme.of(context).textTheme.headline1,
         ),
       ),
       drawer: MainDrawer(),

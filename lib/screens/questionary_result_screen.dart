@@ -19,7 +19,7 @@ class QuestionaryResultScreen extends StatelessWidget {
     final success = routeArguments['success'];
     final RichText successText = RichText(
       text: TextSpan(
-        style: Theme.of(context).textTheme.body1,
+        style: Theme.of(context).textTheme.headline1,
         children: [
           TextSpan(
             text: 'Вы сможете стать донором уже завтра.',

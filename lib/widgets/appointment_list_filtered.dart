@@ -1,47 +1,47 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; 
+import 'package:provider/provider.dart';
 
 import 'package:yadonor/models/appointment-item.dart';
 import 'package:yadonor/providers/calendar_screen_provider.dart';
 import 'package:yadonor/widgets/appointment_card.dart';
 
+///List of future, past or present [Appointment] for calendar_screen.dart according to [FilterType].
 class AppointmentListFiltered extends StatefulWidget {
   final FilterType appointmentsFilter;
   AppointmentListFiltered(this.appointmentsFilter);
 
   @override
-  _AppointmentListFilteredState createState() => _AppointmentListFilteredState();
+  _AppointmentListFilteredState createState() =>
+      _AppointmentListFilteredState();
 }
 
 class _AppointmentListFilteredState extends State<AppointmentListFiltered> {
   @override
   Widget build(BuildContext context) {
-    // final calendarAppointmentsData = Provider.of<CalendarAppointmentsProvider>(context);
     final calendarScreenData = Provider.of<CalendarScreenProvider>(context);
-    // calendarScreenData.displayFilteredAppointments(widget.appointmentsFilter);
 
-    List<Appointment> displayedAppointments = calendarScreenData.displayedAppointments;
+    List<Appointment> displayedAppointments =
+        calendarScreenData.displayedAppointments;
 
     String appointmentsText = 'Донации в этом месяце:';
-    // FilterType appointmentFilter = calendarData.appointmentFilter;
 
     switch (widget.appointmentsFilter) {
       case FilterType.future:
         displayedAppointments = calendarScreenData.getFutureAppointments();
         appointmentsText = 'Предстоящие донации:';
-        // print(displayedAppointments);
         break;
       case FilterType.past:
         displayedAppointments = calendarScreenData.getPastAppointments();
         appointmentsText = 'Прошедшие донации:';
-        // print(displayedAppointments);
         break;
       case FilterType.current:
-        displayedAppointments = calendarScreenData.getCurrentMonthAppointments();
+        displayedAppointments =
+            calendarScreenData.getCurrentMonthAppointments();
         // print(displayedAppointments);
         break;
       default:
-        displayedAppointments = calendarScreenData.getCurrentMonthAppointments();
+        displayedAppointments =
+            calendarScreenData.getCurrentMonthAppointments();
         appointmentsText = 'Донации в этом месяце:';
         // print(displayedAppointments);
         break;
@@ -72,36 +72,7 @@ class _AppointmentListFilteredState extends State<AppointmentListFiltered> {
                               appointment: appointment,
                               hasCloseIcon: true,
                             ),
-                            // ListTile(
-                            //   leading: CircleAvatar(
-                            //     backgroundColor: Theme.of(context).accentColor,
-                            //     radius: 20,
-                            //     child:
-                            //         // Icon(
-                            //         // Icons.event_available,
-                            //         // size: 30,
-                            //         // color: Colors.white,
-                            //         Image(
-                            //       image: AssetImage(
-                            //           'assets/images/blood_drop.png'),
-                            //       height: 25,
-                            //       color: Colors.white,
-                            //     ),
-                            //   ),
-                            //   title: Text(DateFormat('d MMMM y, EEEE', 'ru')
-                            //       .format(appointment.day)),
-                            //   subtitle: Text(appointment.event),
-                            //   trailing: IconButton(
-                            //     icon: Icon(Icons.close),
-                            //     onPressed: () {
-                            //       Provider.of<CalendarAppointmentsProvider>(context,
-                            //               listen: false)
-                            //           .removeAppointment(appointment.day);
-                            //     },
-                            //   ),
-                            // ),
                           ),
-                          // ),
                         )
                         .toList(),
                   ),

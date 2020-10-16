@@ -18,7 +18,7 @@ class _CalendarAddScreenState extends State<CalendarAddScreen> {
       appBar: AppBar(
         title: Text(
           'ПЛАНИРОВАНИЕ ДОНАЦИИ',
-          style: Theme.of(context).textTheme.title,
+          style: Theme.of(context).textTheme.headline1,
         ),
       ),
       drawer: MainDrawer(),

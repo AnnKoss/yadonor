@@ -15,7 +15,7 @@ import './screens/questionary_result_screen.dart';
 import './screens/pre_questionary_screen.dart';
 import './screens/questionary_screen.dart';
 import './screens/auth_screen.dart';
-import './screens/adress_screen.dart';
+import 'screens/address_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -102,7 +102,7 @@ class DonorApp extends StatelessWidget {
           QuestionaryResultScreen.routeName: (ctx) => QuestionaryResultScreen(),
           PrecautionsScreen.routeName: (ctx) => PrecautionsScreen(),
           CalendarScreenView.routeName: (ctx) => CalendarScreenView(),
-          AdressScreen.routeName: (ctx) => AdressScreen(),
+          AddressScreen.routeName: (ctx) => AddressScreen(),
           CalendarAddScreen.routeName: (ctx) => CalendarAddScreen(),
         },
       ),

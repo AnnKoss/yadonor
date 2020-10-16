@@ -12,7 +12,7 @@ class PreQuestionaryScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'АНКЕТА ДОНОРА',
-          style: Theme.of(context).textTheme.title,
+          style: Theme.of(context).textTheme.headline1,
         ),
       ),
       drawer: MainDrawer(),
