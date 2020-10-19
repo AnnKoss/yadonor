@@ -1,7 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:yadonor/models/appointment-item.dart';
+import 'package:yadonor/domain/appointment-item.dart';
 
 enum FilterType { future, past, current } ///Chooses whether to show events of the current month, all the future or all the past ones.
 

@@ -1,4 +1,4 @@
-﻿import 'package:yadonor/models/questionary-item.dart';
+﻿import 'package:yadonor/domain/questionary-item.dart';
 
 final List questionList = [
     QuestionaryItem(

@@ -2,12 +2,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:yadonor/main.dart';
-import 'package:yadonor/screens/auth_screen.dart';
-import 'package:yadonor/screens/main_screen.dart';
-import 'package:yadonor/screens/address_screen.dart';
-import 'package:yadonor/screens/precautions_screen.dart';
-import 'package:yadonor/screens/pre_questionary_screen.dart';
-import 'package:yadonor/screens/calendar_screen_view.dart';
+import 'package:yadonor/ui/auth/auth_screen.dart';
+import 'package:yadonor/ui/main_screen.dart';
+import 'package:yadonor/ui/address/address_screen.dart';
+import 'package:yadonor/ui/precautions_screen.dart';
+import 'package:yadonor/ui/questionary/pre_questionary_screen.dart';
+import 'package:yadonor/data/calendar_screen_view.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget buildListTile(

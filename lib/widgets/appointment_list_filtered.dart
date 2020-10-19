@@ -1,9 +1,9 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:yadonor/models/appointment-item.dart';
-import 'package:yadonor/providers/calendar_screen_provider.dart';
-import 'package:yadonor/widgets/appointment_card.dart';
+import 'package:yadonor/domain/appointment-item.dart';
+import 'package:yadonor/data/providers/calendar_screen_provider.dart';
+import 'package:yadonor/ui/appointment_card.dart';
 
 ///List of future, past or present [Appointment] for calendar_screen.dart according to [FilterType].
 class AppointmentListFiltered extends StatefulWidget {

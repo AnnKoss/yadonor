@@ -5,17 +5,17 @@ import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 // import 'package:yadonor/providers/calendar_screen_provider.dart';
 
-import 'providers/calendar_appointments_provider.dart';
+import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
 
-import './screens/main_screen.dart';
-import './screens/calendar_add_screen.dart';
-import './screens/calendar_screen_view.dart';
-import './screens/precautions_screen.dart';
-import './screens/questionary_result_screen.dart';
-import './screens/pre_questionary_screen.dart';
-import './screens/questionary_screen.dart';
-import './screens/auth_screen.dart';
-import 'screens/address_screen.dart';
+import 'ui/main_screen.dart';
+import 'ui/calendar/calendar_add_screen.dart';
+import 'data/calendar_screen_view.dart';
+import 'ui/precautions_screen.dart';
+import 'ui/questionary/questionary_result_screen.dart';
+import 'ui/questionary/pre_questionary_screen.dart';
+import 'ui/questionary/questionary_screen.dart';
+import 'ui/auth/auth_screen.dart';
+import 'ui/address/address_screen.dart';
 
 void main() => runApp(MyApp());
 

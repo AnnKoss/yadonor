@@ -2,13 +2,13 @@
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:yadonor/providers/calendar_appointments_provider.dart';
-import 'package:yadonor/screens/calendar_screen_view.dart';
-import 'package:yadonor/screens/pre_questionary_screen.dart';
-import 'package:yadonor/screens/address_screen.dart';
-import 'package:yadonor/widgets/main_screen_button.dart';
-import 'package:yadonor/widgets/main_drawer.dart';
-import 'package:yadonor/widgets/appointment_card.dart';
+import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
+import 'package:yadonor/data/calendar_screen_view.dart';
+import 'package:yadonor/ui/questionary/pre_questionary_screen.dart';
+import 'package:yadonor/ui/address/address_screen.dart';
+import 'package:yadonor/ui/main_screen_button.dart';
+import 'package:yadonor/ui/main_drawer.dart';
+import 'package:yadonor/ui/appointment_card.dart';
 
 class MainScreen extends StatefulWidget {
   static const routeName = '/main';

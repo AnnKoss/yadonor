@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:yadonor/info/address_list.dart';
+import 'package:yadonor/data/dictionaries/address_list.dart';
 
 
 List<Marker> markers = [];

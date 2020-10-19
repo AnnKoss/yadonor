@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:yadonor/providers/calendar_appointments_provider.dart';
-import 'package:yadonor/providers/calendar_screen_provider.dart';
+import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
+import 'package:yadonor/data/providers/calendar_screen_provider.dart';
 import 'package:yadonor/widgets/appointment_list_filtered.dart';
-import 'package:yadonor/widgets/calendar.dart';
-import 'package:yadonor/widgets/main_drawer.dart';
+import 'package:yadonor/ui/calendar/calendar.dart';
+import 'package:yadonor/ui/main_drawer.dart';
 
 class CalendarScreenData extends StatefulWidget {
   static const routeName = '/calendar';
@@ -42,10 +42,12 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
       setState(() {
         _isLoading = true;
       });
+      // await Future.delayed(const Duration(seconds : 2));
       try {
-        Provider.of<CalendarAppointmentsProvider>(context, listen: false).addAppointment(
-            Provider.of<CalendarScreenProvider>(context, listen: false)
-                .selectedDay);
+        Provider.of<CalendarAppointmentsProvider>(context, listen: false)
+            .addAppointment(
+                Provider.of<CalendarScreenProvider>(context, listen: false)
+                    .selectedDay);
       } catch (error) {
         showDialog(
           context: context,
@@ -98,7 +100,8 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
         ],
       ),
       drawer: MainDrawer(),
-      body: (appointmentsFilter == FilterType.current)
+      body: 
+        (appointmentsFilter == FilterType.current)
           ? (!_isLoading)
               ? Column(
                   children: <Widget>[

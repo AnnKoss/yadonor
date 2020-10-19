@@ -2,8 +2,8 @@
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:yadonor/widgets/main_drawer.dart';
-import 'package:yadonor/widgets/address_listView.dart';
+import 'package:yadonor/ui/main_drawer.dart';
+import 'package:yadonor/ui/address/address_listView.dart';
 
 class AddressScreen extends StatefulWidget {
   static const routeName = '/adress';

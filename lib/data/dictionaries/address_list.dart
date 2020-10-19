@@ -1,6 +1,6 @@
 ﻿import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:yadonor/models/address-item.dart';
+import 'package:yadonor/domain/address-item.dart';
 
 final List addressList = [
   AddressItem(

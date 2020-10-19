@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-import 'package:yadonor/models/appointment-item.dart';
+import 'package:yadonor/domain/appointment-item.dart';
 
 // enum FilterType { future, past, current }
 

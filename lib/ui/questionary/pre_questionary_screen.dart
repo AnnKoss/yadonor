@@ -1,8 +1,8 @@
 ﻿import 'package:flutter/material.dart';
 
-import 'package:yadonor/screens/questionary_screen.dart';
-import 'package:yadonor/widgets/button.dart';
-import 'package:yadonor/widgets/main_drawer.dart';
+import 'package:yadonor/ui/questionary/questionary_screen.dart';
+import 'package:yadonor/ui/button.dart';
+import 'package:yadonor/ui/main_drawer.dart';
 
 class PreQuestionaryScreen extends StatelessWidget {
   static const routeName = '/pre-questionary';
