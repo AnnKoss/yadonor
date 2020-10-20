@@ -1,9 +1,21 @@
 ﻿import 'package:flutter/material.dart';
-
 import 'package:yadonor/data/auth/authentication.dart';
 import 'package:yadonor/ui/auth/auth_textformfield.dart';
 
 class LogInForm extends StatelessWidget {
+  final Key loginKey;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final FocusNode emailFocus, passwordFocus;
+
+  LogInForm(
+    this.loginKey,
+    this.emailController,
+    this.passwordController,
+    this.emailFocus,
+    this.passwordFocus,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Form(
