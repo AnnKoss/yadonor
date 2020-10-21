@@ -58,13 +58,13 @@ class _MainScreenState extends State<MainScreen> {
                           width: double.infinity,
                         ),
                         (Provider.of<CalendarAppointmentsProvider>(context)
-                                .isFetchAppointmentsLoading)
+                                .isFetchAppointmentsLoading) //зачем?
                             ? Container(
                                 padding: EdgeInsets.symmetric(vertical: 5),
                                 child: CircularProgressIndicator(),
                               )
                             : (calendarAppointmentsData
-                                        .getNearestAppointment() !=
+                                        .getNearestAppointment() != // а если future?
                                     null)
                                 ? Container(
                                     margin: EdgeInsets.all(10),
