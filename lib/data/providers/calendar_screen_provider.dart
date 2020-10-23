@@ -55,7 +55,7 @@ class CalendarScreenProvider with ChangeNotifier {
   /// Day selected on the calendar screen
   DateTime selectedDay; 
 
-  void selectDay(DateTime day, List appointments, List list) {
+  void selectDay(DateTime day, List appointments) {
     ///A handler for [onDaySelected] property of Calendar widget.
     selectedDay = day;
     selectedDayCheck(day);

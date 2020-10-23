@@ -1,7 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yadonor/data/auth/authentication.dart';
-import 'package:yadonor/data/auth/signup_form.dart';
+
+import 'package:yadonor/ui/auth/widgets/signup/signup_form.dart';
 import 'package:yadonor/ui/auth/auth_bloc.dart';
 import 'package:yadonor/ui/auth/widgets/login/login_form.dart';
 import 'package:yadonor/ui/button.dart';
@@ -120,12 +120,23 @@ class _AuthScreenState extends State<AuthScreen> {
                             Column(
                               children: <Widget>[
                                 SizedBox(height: 30),
-//                                SignUpForm(),
+                                SignUpForm(
+                                  signUpKey,
+                                  emailController,
+                                  passwordController,
+                                  confirmPasswordController,
+                                  emailFocus,
+                                  passwordFocus,
+                                  confirmPasswordFocus,
+                                ),
                                 SizedBox(height: 20),
                                 button(
                                   context: context,
                                   buttonText: 'Зарегистрироваться',
-                                  onPressed: () {},
+                                  onPressed: () => _bloc.add(SubmitSignUpEvent(
+                                    emailController.text,
+                                    passwordController.text,
+                                  )),
                                 ),
                               ],
                             ),

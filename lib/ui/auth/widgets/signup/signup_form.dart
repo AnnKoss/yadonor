@@ -3,24 +3,28 @@
 import 'package:yadonor/ui/auth/auth_textformfield.dart';
 import 'package:yadonor/data/auth/auth_validation.dart';
 
-class LogInForm extends StatelessWidget {
-  final Key loginKey;
+class SignUpForm extends StatelessWidget {
+  final Key signUpKey;
   final TextEditingController emailController;
   final TextEditingController passwordController;
+  final TextEditingController confirmPasswordController;
   final FocusNode emailFocus, passwordFocus;
+  final FocusNode confirmPasswordFocus;
 
-  LogInForm(
-    this.loginKey,
+  SignUpForm(
+    this.signUpKey,
     this.emailController,
     this.passwordController,
+    this.confirmPasswordController,
     this.emailFocus,
     this.passwordFocus,
+    this.confirmPasswordFocus,
   );
 
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: loginKey,
+      key: signUpKey,
       child: Column(
         children: <Widget>[
           authTextFormField(TextFormField(
@@ -39,12 +43,19 @@ class LogInForm extends StatelessWidget {
             ),
             keyboardType: TextInputType.emailAddress,
             validator: emailValidator,
+            // onSaved: (value) {
+            //   _authData['email'] = value;
+            // print('email saved');
+            // },
+            // why not working?
           )),
           authTextFormField(TextFormField(
             controller: passwordController,
-            textInputAction: TextInputAction.done,
+            textInputAction: TextInputAction.next,
             focusNode: passwordFocus,
-            onFieldSubmitted: (_) => FocusScope.of(context).unfocus(),
+            onFieldSubmitted: (term) {
+              fieldFocusChange(context, passwordFocus, confirmPasswordFocus);
+            },
             decoration: InputDecoration(
               hintText: 'Пароль',
               prefixIcon: Padding(
@@ -53,6 +64,21 @@ class LogInForm extends StatelessWidget {
               ),
             ),
             validator: passwordValidator,
+            obscureText: true,
+          )),
+          authTextFormField(TextFormField(
+            controller: confirmPasswordController,
+            textInputAction: TextInputAction.done,
+            focusNode: confirmPasswordFocus,
+            onFieldSubmitted: (_) => FocusScope.of(context).unfocus(),
+            decoration: InputDecoration(
+              hintText: 'Подтвердите пароль',
+              prefixIcon: Padding(
+                padding: EdgeInsets.all(2),
+                child: Icon(Icons.lock),
+              ),
+            ),
+            validator: (value) => confirmPasswordValidator(value, confirmPasswordController),
             obscureText: true,
           )),
         ],
