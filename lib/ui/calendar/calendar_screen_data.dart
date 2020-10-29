@@ -8,6 +8,7 @@ import 'package:yadonor/data/providers/calendar_screen_provider.dart';
 import 'package:yadonor/widgets/appointment_list_filtered.dart';
 import 'package:yadonor/ui/calendar/calendar.dart';
 import 'package:yadonor/ui/main_drawer.dart';
+import 'package:yadonor/ui/calendar/calendar_bloc.dart';
 
 class CalendarScreenData extends StatefulWidget {
   static const routeName = '/calendar';
@@ -19,6 +20,15 @@ class CalendarScreenData extends StatefulWidget {
 class _CalendarScreenDataState extends State<CalendarScreenData> {
   FilterType appointmentsFilter = FilterType.current;
   var _isLoading = false;
+
+  CalendarBloc _bloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _bloc = CalendarBloc(CalendarState());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,38 +48,38 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
       }
     }
 
-    Future<void> onAddButtonPressed() async {
-      setState(() {
-        _isLoading = true;
-      });
-      // await Future.delayed(const Duration(seconds : 2));
-      try {
-        Provider.of<CalendarAppointmentsProvider>(context, listen: false)
-            .addAppointment(
-                Provider.of<CalendarScreenProvider>(context, listen: false)
-                    .selectedDay);
-      } catch (error) {
-        showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            content: Text('Ошибка: "${error.toString()}"'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.of(ctx).pop(),
-                child: Text('Закрыть'),
-              )
-            ],
-          ),
-        );
-      }
-      {
-        setState(
-          () {
-            _isLoading = false;
-          },
-        );
-      }
-    }
+    // Future<void> onAddButtonPressed() async {
+    //   setState(() {
+    //     _isLoading = true;
+    //   });
+    //   // await Future.delayed(const Duration(seconds : 2));
+    //   try {
+    //     Provider.of<CalendarAppointmentsProvider>(context, listen: false)
+    //         .addAppointment(
+    //             Provider.of<CalendarScreenProvider>(context, listen: false)
+    //                 .selectedDay);
+    //   } catch (error) {
+    //     showDialog(
+    //       context: context,
+    //       builder: (ctx) => AlertDialog(
+    //         content: Text('Ошибка: "${error.toString()}"'),
+    //         actions: <Widget>[
+    //           FlatButton(
+    //             onPressed: () => Navigator.of(ctx).pop(),
+    //             child: Text('Закрыть'),
+    //           )
+    //         ],
+    //       ),
+    //     );
+    //   }
+    //   {
+    //     setState(
+    //       () {
+    //         _isLoading = false;
+    //       },
+    //     );
+    //   }
+    // }
 
     return Scaffold(
       appBar: AppBar(
@@ -100,8 +110,7 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
         ],
       ),
       drawer: MainDrawer(),
-      body: 
-        (appointmentsFilter == FilterType.current)
+      body: (appointmentsFilter == FilterType.current)
           ? (!_isLoading)
               ? Column(
                   children: <Widget>[
@@ -157,7 +166,10 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
       floatingActionButton: FloatingActionButton(
         onPressed:
             // Provider.of<CalendarProvider>(context).isCorrectDate ?
-            onAddButtonPressed,
+            // onAddButtonPressed,
+            () => _bloc.add(AddAppointmentEvent(
+                Provider.of<CalendarScreenProvider>(context, listen: false)
+                    .selectedDay)),
         // : null,
         backgroundColor:
             Provider.of<CalendarScreenProvider>(context).isFutureDate
