@@ -8,6 +8,10 @@ import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
 import 'package:yadonor/data/providers/calendar_screen_provider.dart';
 
 class Calendar extends StatefulWidget {
+  final Function onDaySelected;
+
+  const Calendar({Key key, @required this.onDaySelected}) : super(key: key);
+
   @override
   _CalendarState createState() => _CalendarState();
 }
@@ -34,7 +38,7 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    final calendarAppointmentsData = Provider.of<CalendarAppointmentsProvider>(context);
+    final calendarAppointmentsData = Provider.of<CalendarAppointmentRepository>(context);
     final Map<DateTime, List> calendarAppointments = Map.fromIterable(
         calendarAppointmentsData.appointments,
         key: (appointment) => appointment.day,
@@ -55,7 +59,7 @@ class _CalendarState extends State<Calendar> {
       ),
       startingDayOfWeek: StartingDayOfWeek.monday,
       locale: 'ru_Ru',
-      onDaySelected: Provider.of<CalendarScreenProvider>(context).selectDay,
+      onDaySelected: widget.onDaySelected,
       events: calendarAppointments,
       rowHeight: 40,
       onVisibleDaysChanged: (from, to, format) {

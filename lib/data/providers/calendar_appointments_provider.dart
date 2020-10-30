@@ -10,8 +10,8 @@ import 'package:yadonor/domain/appointment-item.dart';
 // enum FilterType { future, past, current }
 
 ///App-wide state provider for future and past donor appointments.
-class CalendarAppointmentsProvider with ChangeNotifier {
-  CalendarAppointmentsProvider() {
+class CalendarAppointmentRepository  {
+  CalendarAppointmentRepository() {
     ///Loads [_appointments] from the server when the consctructor is called and manages the circularProfressInficator while not finished.
     isFetchAppointmentsLoading = true;
     fetchAppointments().then((_) => isFetchAppointmentsLoading = false);
@@ -50,13 +50,11 @@ class CalendarAppointmentsProvider with ChangeNotifier {
           _appointments = loadedAppointments;
           sortAppointments();
 
-          notifyListeners();
         });
       } else {
         _appointments = [];
         print('_appointments');
 
-        notifyListeners();
       }
     } catch (error) {
       throw error;
@@ -114,7 +112,6 @@ class CalendarAppointmentsProvider with ChangeNotifier {
               .toList(),
         );
 
-        notifyListeners();
       });
     }
   }
@@ -134,7 +131,6 @@ class CalendarAppointmentsProvider with ChangeNotifier {
     }).then((_) {
       _appointments.remove(selectedAppointment);
 
-      notifyListeners();
     });
   }
 

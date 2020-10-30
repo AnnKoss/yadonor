@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:yadonor/data/calendar/appointments_service.dart';
 // import 'package:yadonor/providers/calendar_screen_provider.dart';
 
 import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
@@ -57,8 +58,8 @@ class DonorApp extends StatelessWidget {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final User user = _auth.currentUser;
 
-    return ListenableProvider<CalendarAppointmentsProvider>(
-      create: (ctx) => CalendarAppointmentsProvider(),
+    return Provider<AppointmentsRepository>(
+      create: (ctx) => AppointmentsRepository(AppointmentsStorage()),
       child: MaterialApp(
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,

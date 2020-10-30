@@ -45,7 +45,9 @@ class _MainScreenState extends State<MainScreen> {
               child: Card(
                 margin: EdgeInsets.symmetric(vertical: 10),
                 elevation: 3,
-                child: Consumer<CalendarAppointmentsProvider>(
+
+                //todo: У тебя встать блок, который будет работать с репозиторием
+                child: Consumer<CalendarAppointmentRepository>(
                   builder: (context, calendarAppointmentsData, child) {
                     return Column(
                       children: <Widget>[
@@ -57,7 +59,7 @@ class _MainScreenState extends State<MainScreen> {
                           padding: EdgeInsets.only(top: 10),
                           width: double.infinity,
                         ),
-                        (Provider.of<CalendarAppointmentsProvider>(context)
+                        (Provider.of<CalendarAppointmentRepository>(context)
                                 .isFetchAppointmentsLoading) //зачем?
                             ? Container(
                                 padding: EdgeInsets.symmetric(vertical: 5),

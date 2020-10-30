@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yadonor/data/calendar/appointments_service.dart';
 
 import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
 import 'package:yadonor/data/providers/calendar_screen_provider.dart';
@@ -27,7 +28,7 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
   void initState() {
     super.initState();
 
-    _bloc = CalendarBloc(CalendarState());
+    _bloc = CalendarBloc(CalendarState(), context.read<AppointmentsRepository>());
   }
 
   @override
@@ -117,7 +118,11 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
                     Card(
                       elevation: 3,
                       margin: EdgeInsets.only(top: 10),
-                      child: Calendar(),
+                      child: Calendar(
+                        onDaySelected: (day) {
+//                         _bloc.add(SelectDay(day))
+                        },
+                      ),
                     ),
                     Flexible(
                       fit: FlexFit.loose,
@@ -130,7 +135,9 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
                     Card(
                       elevation: 3,
                       margin: EdgeInsets.only(top: 10),
-                      child: Calendar(),
+                      child: Calendar(
+//                        onDaySelected: ,
+                      ),
                     ),
                     Flexible(
                       fit: FlexFit.loose,

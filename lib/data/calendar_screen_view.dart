@@ -11,7 +11,7 @@ class CalendarScreenView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListenableProvider<CalendarScreenProvider>(
-        create: (ctx) => CalendarScreenProvider(Provider.of<CalendarAppointmentsProvider>(context).appointments),
+        create: (ctx) => CalendarScreenProvider(Provider.of<CalendarAppointmentRepository>(context).appointments),
         child: CalendarScreenData());
   }
 }

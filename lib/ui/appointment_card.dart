@@ -19,7 +19,7 @@ class AppointmentCard extends StatelessWidget {
     Future<void> onRemoveButtonPressed() async {
       print('try to delete');
       try {
-        Provider.of<CalendarAppointmentsProvider>(context, listen: false)
+        Provider.of<CalendarAppointmentRepository>(context, listen: false)
             .removeAppointment(appointment.day);
       } catch (error) {
         showDialog(

@@ -2,6 +2,7 @@
 
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yadonor/data/calendar/appointments_service.dart';
 
 import 'package:yadonor/data/calendar/calendar_service.dart';
 import 'package:yadonor/domain/appointment-item.dart';
@@ -30,11 +31,12 @@ class CalendarLoadingState extends CalendarState {}
 class CalendarErrorState extends CalendarState {}
 
 class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
-  final CalendarService _service = CalendarService();
+  final  AppointmentsRepository _service;
 
   List<Appointment> appointments = [];
 
-  CalendarBloc(CalendarState initialState) : super(initialState);
+
+  CalendarBloc(CalendarState initialState, this._service) : super(initialState);
 
   @override
   Stream<CalendarState> mapEventToState(CalendarEvent event) {
