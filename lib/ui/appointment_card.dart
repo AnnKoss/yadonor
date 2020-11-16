@@ -8,34 +8,36 @@ import 'package:yadonor/domain/appointment-item.dart';
 class AppointmentCard extends StatelessWidget {
   final Appointment appointment;
   final bool hasCloseIcon;
+  final void onRemoveButtonPressed;
 
   AppointmentCard({
     @required this.appointment,
     this.hasCloseIcon,
+    this.onRemoveButtonPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    Future<void> onRemoveButtonPressed() async {
-      print('try to delete');
-      try {
-        Provider.of<CalendarAppointmentRepository>(context, listen: false)
-            .removeAppointment(appointment.day);
-      } catch (error) {
-        showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            content: Text('Ошибка: "${error.toString()}"'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.of(ctx).pop(),
-                child: Text('Закрыть'),
-              )
-            ],
-          ),
-        );
-      }
-    }
+    // Future<void> onRemoveButtonPressed() async {
+    //   print('try to delete');
+    //   try {
+    //     Provider.of<CalendarAppointmentRepository>(context, listen: false)
+    //         .removeAppointment(appointment.day);
+    //   } catch (error) {
+    //     showDialog(
+    //       context: context,
+    //       builder: (ctx) => AlertDialog(
+    //         content: Text('Ошибка: "${error.toString()}"'),
+    //         actions: <Widget>[
+    //           FlatButton(
+    //             onPressed: () => Navigator.of(ctx).pop(),
+    //             child: Text('Закрыть'),
+    //           )
+    //         ],
+    //       ),
+    //     );
+    //   }
+    // }
 
     return ListTile(
       leading: CircleAvatar(
@@ -56,7 +58,7 @@ class AppointmentCard extends StatelessWidget {
       subtitle: Text(appointment.appointment),
       trailing: hasCloseIcon ? IconButton(
         icon: Icon(Icons.close),
-        onPressed: onRemoveButtonPressed,
+        onPressed: () => onRemoveButtonPressed,
       ) : null,
     );
   }

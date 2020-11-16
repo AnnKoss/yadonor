@@ -4,10 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:yadonor/domain/appointment-item.dart';
 import 'package:yadonor/data/providers/calendar_screen_provider.dart';
 import 'package:yadonor/ui/appointment_card.dart';
+import 'package:yadonor/data/calendar/appointments_service.dart';
+import 'package:yadonor/ui/calendar/calendar_bloc.dart';
 
 ///List of future, past or present [Appointment] for calendar_screen.dart according to [FilterType].
 class AppointmentListFiltered extends StatefulWidget {
   final FilterType appointmentsFilter;
+
   AppointmentListFiltered(this.appointmentsFilter);
 
   @override
@@ -16,6 +19,16 @@ class AppointmentListFiltered extends StatefulWidget {
 }
 
 class _AppointmentListFilteredState extends State<AppointmentListFiltered> {
+  CalendarBloc _bloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _bloc =
+        CalendarBloc(CalendarState(), context.read<AppointmentsRepository>());
+  }
+
   @override
   Widget build(BuildContext context) {
     final calendarScreenData = Provider.of<CalendarScreenProvider>(context);
@@ -71,6 +84,7 @@ class _AppointmentListFilteredState extends State<AppointmentListFiltered> {
                             child: AppointmentCard(
                               appointment: appointment,
                               hasCloseIcon: true,
+                              onRemoveButtonPressed: _bloc.add(RemoveAppointmentEvent(appointment.day)),
                             ),
                           ),
                         )

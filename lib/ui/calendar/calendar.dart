@@ -6,11 +6,21 @@ import 'package:table_calendar/table_calendar.dart';
 
 import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
 import 'package:yadonor/data/providers/calendar_screen_provider.dart';
+import 'package:yadonor/data/calendar/appointments_service.dart';
+import 'package:yadonor/ui/calendar/calendar_bloc.dart';
+import 'package:yadonor/domain/appointment-item.dart';
 
 class Calendar extends StatefulWidget {
-  final Function onDaySelected;
+  final void Function(DateTime, List<dynamic>) onDaySelected;
+  final void Function(DateTime, DateTime, CalendarFormat) onVisibleDaysChanged;
+  final List<Appointment> appointments;
 
-  const Calendar({Key key, @required this.onDaySelected}) : super(key: key);
+  const Calendar({
+    Key key,
+    @required this.onDaySelected,
+    @required this.onVisibleDaysChanged,
+    @required this.appointments,
+  }) : super(key: key);
 
   @override
   _CalendarState createState() => _CalendarState();
@@ -22,12 +32,17 @@ class _CalendarState extends State<Calendar> {
 
   bool isCorrectDate = true;
 
+  CalendarBloc _bloc;
+
   @override
   void initState() {
     super.initState();
     _calendarController = CalendarController();
 
     initializeDateFormatting();
+
+    _bloc =
+        CalendarBloc(CalendarState(), context.read<AppointmentsRepository>());
   }
 
   @override
@@ -38,9 +53,10 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    final calendarAppointmentsData = Provider.of<CalendarAppointmentRepository>(context);
+    // final calendarAppointmentsData = Provider.of<CalendarAppointmentRepository>(context);
     final Map<DateTime, List> calendarAppointments = Map.fromIterable(
-        calendarAppointmentsData.appointments,
+        // calendarAppointmentsData.appointments,
+        widget.appointments,
         key: (appointment) => appointment.day,
         value: (appointment) => [appointment.appointment]);
     print(calendarAppointments);
@@ -62,13 +78,14 @@ class _CalendarState extends State<Calendar> {
       onDaySelected: widget.onDaySelected,
       events: calendarAppointments,
       rowHeight: 40,
-      onVisibleDaysChanged: (from, to, format) {
-        Provider.of<CalendarScreenProvider>(context, listen: false)
-            .changeVisibleDates(from);
-        Provider.of<CalendarScreenProvider>(context, listen: false)
-            .getCurrentMonthAppointments();
-        // print(from);
-      },
+      onVisibleDaysChanged: widget.onVisibleDaysChanged,
+      // (from, to, format) {
+      //   Provider.of<CalendarScreenProvider>(context, listen: false)
+      //       .changeVisibleDates(from);
+      //   Provider.of<CalendarScreenProvider>(context, listen: false)
+      //       .getCurrentMonthAppointments();
+      //   // print(from);
+      // },
     );
   }
 }

@@ -8,15 +8,15 @@ import 'package:yadonor/data/calendar/appointments_service.dart';
 
 import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
 
-import 'ui/main_screen.dart';
-import 'ui/calendar/calendar_add_screen.dart';
-import 'data/calendar_screen_view.dart';
-import 'ui/precautions_screen.dart';
-import 'ui/questionary/questionary_result_screen.dart';
-import 'ui/questionary/pre_questionary_screen.dart';
-import 'ui/questionary/questionary_screen.dart';
-import 'ui/auth/auth_screen.dart';
-import 'ui/address/address_screen.dart';
+import 'package:yadonor/ui/main_screen.dart';
+import 'package:yadonor/ui/calendar/calendar_add_screen.dart';
+import 'package:yadonor/ui/calendar/calendar_screen.dart';
+import 'package:yadonor/ui/precautions_screen.dart';
+import 'package:yadonor/ui/questionary/questionary_result_screen.dart';
+import 'package:yadonor/ui/questionary/pre_questionary_screen.dart';
+import 'package:yadonor/ui/questionary/questionary_screen.dart';
+import 'package:yadonor/ui/auth/auth_screen.dart';
+import 'package:yadonor/ui/address/address_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -102,7 +102,7 @@ class DonorApp extends StatelessWidget {
           QuestionaryScreen.routeName: (ctx) => QuestionaryScreen(),
           QuestionaryResultScreen.routeName: (ctx) => QuestionaryResultScreen(),
           PrecautionsScreen.routeName: (ctx) => PrecautionsScreen(),
-          CalendarScreenView.routeName: (ctx) => CalendarScreenView(),
+          CalendarScreen.routeName: (ctx) => CalendarScreen(),
           AddressScreen.routeName: (ctx) => AddressScreen(),
           CalendarAddScreen.routeName: (ctx) => CalendarAddScreen(),
         },

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:yadonor/data/calendar/appointments_service.dart';
 
 import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
@@ -11,14 +12,14 @@ import 'package:yadonor/ui/calendar/calendar.dart';
 import 'package:yadonor/ui/main_drawer.dart';
 import 'package:yadonor/ui/calendar/calendar_bloc.dart';
 
-class CalendarScreenData extends StatefulWidget {
+class CalendarScreen extends StatefulWidget {
   static const routeName = '/calendar';
 
   @override
-  _CalendarScreenDataState createState() => _CalendarScreenDataState();
+  _CalendarScreenState createState() => _CalendarScreenState();
 }
 
-class _CalendarScreenDataState extends State<CalendarScreenData> {
+class _CalendarScreenState extends State<CalendarScreen> {
   FilterType appointmentsFilter = FilterType.current;
   var _isLoading = false;
 
@@ -28,7 +29,8 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
   void initState() {
     super.initState();
 
-    _bloc = CalendarBloc(CalendarState(), context.read<AppointmentsRepository>());
+    _bloc =
+        CalendarBloc(CalendarState(), context.read<AppointmentsRepository>());
   }
 
   @override
@@ -111,60 +113,43 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
         ],
       ),
       drawer: MainDrawer(),
-      body: (appointmentsFilter == FilterType.current)
-          ? (!_isLoading)
-              ? Column(
-                  children: <Widget>[
-                    Card(
-                      elevation: 3,
-                      margin: EdgeInsets.only(top: 10),
-                      child: Calendar(
-                        onDaySelected: (day) {
-//                         _bloc.add(SelectDay(day))
-                        },
-                      ),
-                    ),
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: AppointmentListFiltered(appointmentsFilter),
-                    ),
-                  ],
-                )
-              : Column(
-                  children: <Widget>[
-                    Card(
-                      elevation: 3,
-                      margin: EdgeInsets.only(top: 10),
-                      child: Calendar(
-//                        onDaySelected: ,
-                      ),
-                    ),
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: Stack(
-                        children: <Widget>[
-                          AppointmentListFiltered(appointmentsFilter),
-                          Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              color: Color(0xffffff).withOpacity(0.3)),
-                          Center(child: CircularProgressIndicator()),
-                        ],
-                      ),
-                    ),
-                  ],
-                )
-          : (!_isLoading)
-              ? AppointmentListFiltered(appointmentsFilter)
-              : Flexible(
-                  fit: FlexFit.loose,
-                  child: Stack(
-                    children: <Widget>[
-                      AppointmentListFiltered(appointmentsFilter),
-                      Center(child: CircularProgressIndicator()),
-                    ],
-                  ),
+      body: Column(
+              children: <Widget>[
+                Container(
+                  child: (appointmentsFilter == FilterType.current)
+                      ? Card(
+                          elevation: 3,
+                          margin: EdgeInsets.only(top: 10),
+                          child: Calendar(
+                            onDaySelected: (day, appointments) {
+                              _bloc.add(SelectDayEvent(day, appointments));
+                            },
+                            onVisibleDaysChanged: (from, to, format) {
+                              _bloc.add(
+                                  ChangeVisibleDatesEvent(from, to, format));
+                            },
+                            appointments: _bloc.add(GetAppointmentsEvent),
+                          ),
+                        )
+                      : SizedBox(height: 0),
                 ),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: (!_isLoading)
+                      ? AppointmentListFiltered(appointmentsFilter)
+                      : Stack(
+                          children: <Widget>[
+                            AppointmentListFiltered(appointmentsFilter),
+                            Container(
+                                width: double.infinity,
+                                height: double.infinity,
+                                color: Color(0xffffff).withOpacity(0.3)),
+                            Center(child: CircularProgressIndicator()),
+                          ],
+                        ),
+                ),
+              ],
+            ),
       // button(
       //   context: context,
       //   onPressed: () => ,
@@ -174,9 +159,7 @@ class _CalendarScreenDataState extends State<CalendarScreenData> {
         onPressed:
             // Provider.of<CalendarProvider>(context).isCorrectDate ?
             // onAddButtonPressed,
-            () => _bloc.add(AddAppointmentEvent(
-                Provider.of<CalendarScreenProvider>(context, listen: false)
-                    .selectedDay)),
+            () => _bloc.add(AddAppointmentEvent()),
         // : null,
         backgroundColor:
             Provider.of<CalendarScreenProvider>(context).isFutureDate

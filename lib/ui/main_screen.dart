@@ -1,13 +1,17 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
-import 'package:yadonor/data/calendar_screen_view.dart';
+import 'package:yadonor/ui/calendar/calendar_bloc.dart';
+import 'package:yadonor/ui/calendar/calendar_screen.dart';
 import 'package:yadonor/ui/questionary/pre_questionary_screen.dart';
 import 'package:yadonor/ui/address/address_screen.dart';
 import 'package:yadonor/ui/main_screen_button.dart';
 import 'package:yadonor/ui/main_drawer.dart';
+import 'package:yadonor/data/calendar/appointments_service.dart';
+import 'package:yadonor/ui/calendar/calendar_bloc.dart';
 import 'package:yadonor/ui/appointment_card.dart';
 
 class MainScreen extends StatefulWidget {
@@ -17,6 +21,16 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  CalendarBloc _bloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _bloc =
+        CalendarBloc(CalendarState(), context.read<AppointmentsRepository>());
+  }
+
   @override
   Widget build(BuildContext context) {
     print('build mainScreen');
@@ -47,53 +61,46 @@ class _MainScreenState extends State<MainScreen> {
                 elevation: 3,
 
                 //todo: У тебя встать блок, который будет работать с репозиторием
-                child: Consumer<CalendarAppointmentRepository>(
-                  builder: (context, calendarAppointmentsData, child) {
+                child: BlocBuilder<CalendarBloc, CalendarState>(
+                  cubit: _bloc,
+                  builder: (context, state) {
+                    if (state is CalendarLoadingState) {} 
                     return Column(
-                      children: <Widget>[
-                        Container(
-                          child: Text(
-                            'Ближайшая донация:',
-                            textAlign: TextAlign.center,
-                          ),
-                          padding: EdgeInsets.only(top: 10),
-                          width: double.infinity,
-                        ),
-                        (Provider.of<CalendarAppointmentRepository>(context)
-                                .isFetchAppointmentsLoading) //зачем?
+                  children: <Widget>[
+                    Container(
+                      child: Text(
+                        'Ближайшая донация:',
+                        textAlign: TextAlign.center,
+                      ),
+                      padding: EdgeInsets.only(top: 10),
+                      width: double.infinity,
+                    ),
+                    (calendarAppointmentsData
+                                    .getNearestAppointment() != // а если future?
+                                null)
                             ? Container(
-                                padding: EdgeInsets.symmetric(vertical: 5),
-                                child: CircularProgressIndicator(),
+                                margin: EdgeInsets.all(10),
+                                child: AppointmentCard(
+                                  appointment: _bloc.add(GetNearestAppointmentEvent()),
+                                  hasCloseIcon: false,
+                                ),
                               )
-                            : (calendarAppointmentsData
-                                        .getNearestAppointment() != // а если future?
-                                    null)
-                                ? Container(
-                                    margin: EdgeInsets.all(10),
-                                    child: AppointmentCard(
-                                      appointment: calendarAppointmentsData
-                                          .getNearestAppointment(),
-                                      hasCloseIcon: false,
-                                    ),
-                                  )
-                                : FlatButton(
-                                    onPressed: () => Navigator.of(context)
-                                        .pushNamed(
-                                            CalendarScreenView.routeName),
-                                    child: Text('Запланировать',
-                                        style: TextStyle(fontSize: 20)),
-                                    textColor: Theme.of(context).accentColor,
-                                  ),
-                      ],
-                    );
-                  },
+                            : FlatButton(
+                                onPressed: () => Navigator.of(context)
+                                    .pushNamed(CalendarScreen.routeName),
+                                child: Text('Запланировать',
+                                    style: TextStyle(fontSize: 20)),
+                                textColor: Theme.of(context).accentColor,
+                              ),
+                  ],
                 ),
+                }),
               ),
             ),
             SizedBox(height: 20),
             mainScreenButton(
               onPressed: () =>
-                  Navigator.of(context).pushNamed(CalendarScreenView.routeName),
+                  Navigator.of(context).pushNamed(CalendarScreen.routeName),
               buttonText: 'КАЛЕНДАРЬ',
             ),
             mainScreenButton(
