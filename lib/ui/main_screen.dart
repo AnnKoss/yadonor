@@ -3,15 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
-import 'package:yadonor/ui/calendar/calendar_bloc.dart';
+import 'package:yadonor/ui/calendar/appointments_bloc.dart';
 import 'package:yadonor/ui/calendar/calendar_screen.dart';
 import 'package:yadonor/ui/questionary/pre_questionary_screen.dart';
 import 'package:yadonor/ui/address/address_screen.dart';
 import 'package:yadonor/ui/main_screen_button.dart';
 import 'package:yadonor/ui/main_drawer.dart';
-import 'package:yadonor/data/calendar/appointments_service.dart';
-import 'package:yadonor/ui/calendar/calendar_bloc.dart';
 import 'package:yadonor/ui/appointment_card.dart';
 
 class MainScreen extends StatefulWidget {
@@ -21,14 +18,11 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  CalendarBloc _bloc;
-
   @override
   void initState() {
     super.initState();
 
-    _bloc =
-        CalendarBloc(CalendarState(), context.read<AppointmentsRepository>());
+    context.read<AppointmentsBloc>().add(GetAppointmentsEvent());
   }
 
   @override
@@ -61,40 +55,59 @@ class _MainScreenState extends State<MainScreen> {
                 elevation: 3,
 
                 //todo: У тебя встать блок, который будет работать с репозиторием
-                child: BlocBuilder<CalendarBloc, CalendarState>(
-                  cubit: _bloc,
-                  builder: (context, state) {
-                    if (state is CalendarLoadingState) {} 
-                    return Column(
+                child: Column(
                   children: <Widget>[
                     Container(
                       child: Text(
                         'Ближайшая донация:',
                         textAlign: TextAlign.center,
                       ),
-                      padding: EdgeInsets.only(top: 10),
+                      margin: EdgeInsets.only(top: 10),
                       width: double.infinity,
                     ),
-                    (calendarAppointmentsData
-                                    .getNearestAppointment() != // а если future?
-                                null)
-                            ? Container(
-                                margin: EdgeInsets.all(10),
-                                child: AppointmentCard(
-                                  appointment: _bloc.add(GetNearestAppointmentEvent()),
-                                  hasCloseIcon: false,
-                                ),
-                              )
-                            : FlatButton(
-                                onPressed: () => Navigator.of(context)
-                                    .pushNamed(CalendarScreen.routeName),
-                                child: Text('Запланировать',
-                                    style: TextStyle(fontSize: 20)),
-                                textColor: Theme.of(context).accentColor,
-                              ),
+                    Container(
+                      height: 75,
+                      margin: EdgeInsets.only(bottom: 10),
+                      child: BlocBuilder<AppointmentsBloc, AppointmentsState>(
+                          builder: (context, state) {
+                        print(
+                            'main_screen incoming state: ' + state.toString());
+                        if (state is AppointmentsLoadingState) {
+                          return Container(
+                            margin: EdgeInsets.all(10),
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
+                        if (state is AppointmentsLoadedState) {
+                          print('main_screen appointmentsList: ');
+                          print(state.appointmentsList.appointments);
+                          print('nearestAppointment: ');
+                          print(state.appointmentsList.nearestAppointment);
+                          return (state.appointmentsList.nearestAppointment !=
+                                  null)
+                              ? Container(
+                                  margin: EdgeInsets.all(10),
+                                  width: 300,
+                                  child: AppointmentCard(
+                                    appointment: state
+                                        .appointmentsList.nearestAppointment,
+                                    hasCloseIcon: false,
+                                  ),
+                                )
+                              : FlatButton(
+                                  onPressed: () => Navigator.of(context)
+                                      .pushNamed(CalendarScreen.routeName),
+                                  child: Text('Запланировать',
+                                      style: TextStyle(fontSize: 20)),
+                                  textColor: Theme.of(context).accentColor,
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                );
+                        }
+                        return const Text('Something went wrong!');
+                      }),
+                    )
                   ],
                 ),
-                }),
               ),
             ),
             SizedBox(height: 20),

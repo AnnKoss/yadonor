@@ -60,14 +60,14 @@ class AppointmentsRepository {
     print(userId);
     print('fetchAppointments');
 
-    if (_storage.appointments.isNotEmpty) {
-      return _storage.appointments;
-    }
+    // if (_storage.appointments.isNotEmpty) {
+    //   return _storage.appointments;
+    // }
+    final List<Appointment> loadedAppointments = [];
 
     final String url = 'https://yadonor-app.firebaseio.com/$userId.json';
     try {
       final response = await http.get(url);
-      final List<Appointment> loadedAppointments = [];
       if (json.decode(response.body) != null) {
         print('income json:');
         print(json.decode(response.body));
@@ -81,23 +81,28 @@ class AppointmentsRepository {
             ),
           );
         });
+        print(extractedData.length.toString() + ' - number of loaded appointments');
       }
 
-      _storage.appointments.clear();
-      _storage.appointments.addAll(loadedAppointments);
+      print('appointments_servise getAppointments: ' + loadedAppointments.toString());
+      // _storage.appointments.clear();
+      // _storage.appointments.addAll(loadedAppointments);
 
-      sortAppointments();
+      // sortAppointments();
 
-      return _storage.appointments;
+      // return _storage.appointments;
+
     } catch (error) {
-      if (_storage.appointments.isEmpty) {
-        rethrow;
-      }
-      return _storage.appointments;
+      // if (_storage.appointments.isEmpty) {
+      //   rethrow;
+      // }
+      rethrow;
     }
+    return loadedAppointments;
+    // return _storage.appointments;
   }
 
-  Future<void> addAppointment() async {
+  Future<void> addAppointment(selectedDay) async {
     final String userId = FirebaseAuth.instance.currentUser.uid;
     final String appointmentDate = DateFormat('y-M-d').format(selectedDay);
     final String url =
@@ -113,10 +118,10 @@ class AppointmentsRepository {
           },
         ),
       );
-      _storage.appointments.add(Appointment(
-        selectedDay,
-        'Донорство крови',
-      ));
+      // _storage.appointments.add(Appointment(
+      //   selectedDay,
+      //   'Донорство крови',
+      // ));
     } catch (error) {
       print(error);
       throw error;
@@ -133,20 +138,20 @@ class AppointmentsRepository {
     try {
       http.delete(url);
 
-      final Appointment selectedAppointment = _storage.appointments
-          .firstWhere((appointment) => appointment.day == appointment.day);
+      // final Appointment selectedAppointment = _storage.appointments
+      //     .firstWhere((appointment) => appointment.day == appointment.day);
 
-      if (selectedAppointment != null) {
-        _storage.appointments
-            .removeWhere((appointment) => appointment == selectedAppointment);
-      }
+      // if (selectedAppointment != null) {
+      //   _storage.appointments
+      //       .removeWhere((appointment) => appointment == selectedAppointment);
+      // }
     } catch (error) {
       print(error);
       throw error;
     }
   }
 
-  Future<Appointment> getNearestAppointment() async {
+  Appointment get getNearestAppointment {
     ///Returns the first [Appointment] since today.
 
     return _storage.appointments.firstWhere((entry) {

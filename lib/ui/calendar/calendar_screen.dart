@@ -1,16 +1,16 @@
-﻿import 'dart:async';
-
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:yadonor/data/calendar/appointments_service.dart';
 
-import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
-import 'package:yadonor/data/providers/calendar_screen_provider.dart';
 import 'package:yadonor/widgets/appointment_list_filtered.dart';
 import 'package:yadonor/ui/calendar/calendar.dart';
 import 'package:yadonor/ui/main_drawer.dart';
-import 'package:yadonor/ui/calendar/calendar_bloc.dart';
+import 'package:yadonor/ui/calendar/appointments_bloc.dart';
+import 'package:yadonor/domain/appointment-item.dart';
+
+enum FilterType { future, past, current }
+
+///Chooses whether to show events of the current month, all the future or all the past ones.
 
 class CalendarScreen extends StatefulWidget {
   static const routeName = '/calendar';
@@ -20,22 +20,50 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
+
+  DateTime firstVisibleDate = DateTime(
+        /// The first date visible on the screen of current month. Used for changing displayed current month appointments in appointment_list_filtered.dart.
+        DateTime.now().year,
+        DateTime.now().month,
+        1);
+        
   FilterType appointmentsFilter = FilterType.current;
-  var _isLoading = false;
 
-  CalendarBloc _bloc;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _bloc =
-        CalendarBloc(CalendarState(), context.read<AppointmentsRepository>());
-  }
+  ///is the [selectedDay] in the future (true) or in the past
+  bool isFutureDate = true; 
 
   @override
   Widget build(BuildContext context) {
     // print('build');
+
+    DateTime selectedDay = DateTime.now();
+
+    void selectedDayCheck(DateTime day) {
+    ///Checks if [selectedDay] is in the past or in the future.
+    if (day.isAfter(DateTime.now().subtract(Duration(days: 1)))) {
+      isFutureDate = true;
+    } else {
+      isFutureDate = false;
+    }
+  }
+
+    void selectDay(DateTime day, List<Appointment> appointments) {
+      ///A handler for [onDaySelected] property of Calendar widget.
+      // DateTime selectedDay;
+      if (day != null) {
+        selectedDay = day;
+      }
+      selectedDayCheck(day);
+      // return selectedDay;
+    }
+
+    void changeVisibleDates(DateTime from) {
+      ///Changes displayed current month appointments in appointment_list_filtered.dart.
+      print('changeVisibleDates from: ' + from.toString());
+      setState(() {
+        firstVisibleDate = from;
+      });
+    }
 
     void selectFilter(FilterType result) {
       setState(() {
@@ -43,46 +71,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
       });
       print(appointmentsFilter);
       if (appointmentsFilter == FilterType.current) {
-        Provider.of<CalendarScreenProvider>(context, listen: false)
-            .changeVisibleDates(
-                DateTime(DateTime.now().year, DateTime.now().month, 1));
-        Provider.of<CalendarScreenProvider>(context, listen: false)
-            .getCurrentMonthAppointments();
+        changeVisibleDates(
+            DateTime(DateTime.now().year, DateTime.now().month, 1));
       }
     }
-
-    // Future<void> onAddButtonPressed() async {
-    //   setState(() {
-    //     _isLoading = true;
-    //   });
-    //   // await Future.delayed(const Duration(seconds : 2));
-    //   try {
-    //     Provider.of<CalendarAppointmentsProvider>(context, listen: false)
-    //         .addAppointment(
-    //             Provider.of<CalendarScreenProvider>(context, listen: false)
-    //                 .selectedDay);
-    //   } catch (error) {
-    //     showDialog(
-    //       context: context,
-    //       builder: (ctx) => AlertDialog(
-    //         content: Text('Ошибка: "${error.toString()}"'),
-    //         actions: <Widget>[
-    //           FlatButton(
-    //             onPressed: () => Navigator.of(ctx).pop(),
-    //             child: Text('Закрыть'),
-    //           )
-    //         ],
-    //       ),
-    //     );
-    //   }
-    //   {
-    //     setState(
-    //       () {
-    //         _isLoading = false;
-    //       },
-    //     );
-    //   }
-    // }
 
     return Scaffold(
       appBar: AppBar(
@@ -113,7 +105,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ],
       ),
       drawer: MainDrawer(),
-      body: Column(
+      body: BlocBuilder<AppointmentsBloc, AppointmentsState>(
+        builder: (context, state) {
+          if (state is AppointmentsLoadingState) {
+            return Column(
               children: <Widget>[
                 Container(
                   child: (appointmentsFilter == FilterType.current)
@@ -122,34 +117,67 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           margin: EdgeInsets.only(top: 10),
                           child: Calendar(
                             onDaySelected: (day, appointments) {
-                              _bloc.add(SelectDayEvent(day, appointments));
+                              selectDay(day, appointments);
                             },
                             onVisibleDaysChanged: (from, to, format) {
-                              _bloc.add(
-                                  ChangeVisibleDatesEvent(from, to, format));
+                              setState(() {
+                                changeVisibleDates(from);
+                              });
+
+                              //getCurrentMonthAppointments
                             },
-                            appointments: _bloc.add(GetAppointmentsEvent),
-                          ),
-                        )
+                            appointments: [],
+                          ))
                       : SizedBox(height: 0),
                 ),
                 Flexible(
                   fit: FlexFit.loose,
-                  child: (!_isLoading)
-                      ? AppointmentListFiltered(appointmentsFilter)
-                      : Stack(
-                          children: <Widget>[
-                            AppointmentListFiltered(appointmentsFilter),
-                            Container(
-                                width: double.infinity,
-                                height: double.infinity,
-                                color: Color(0xffffff).withOpacity(0.3)),
-                            Center(child: CircularProgressIndicator()),
-                          ],
-                        ),
+                  child: Stack(
+                    children: <Widget>[
+                      AppointmentListFiltered(
+                          appointmentsFilter, firstVisibleDate),
+                      Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          color: Color(0xffffff).withOpacity(0.3)),
+                      Center(child: CircularProgressIndicator()),
+                    ],
+                  ),
                 ),
               ],
-            ),
+            );
+          }
+          if (state is AppointmentsLoadedState) {
+            return Column(
+              children: <Widget>[
+                Container(
+                  child: (appointmentsFilter == FilterType.current)
+                      ? Card(
+                          elevation: 3,
+                          margin: EdgeInsets.only(top: 10),
+                          child: Calendar(
+                            onDaySelected: (day, appointments) {
+                              selectDay(
+                                  day, state.appointmentsList.appointments);
+                            },
+                            onVisibleDaysChanged: (from, to, format) {
+                                changeVisibleDates(from);
+                            },
+                            appointments: state.appointmentsList.appointments,
+                          ))
+                      : SizedBox(height: 0),
+                ),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: AppointmentListFiltered(
+                      appointmentsFilter, firstVisibleDate),
+                ),
+              ],
+            );
+          }
+          return const Text('Something went wrong!');
+        },
+      ),
       // button(
       //   context: context,
       //   onPressed: () => ,
@@ -159,12 +187,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
         onPressed:
             // Provider.of<CalendarProvider>(context).isCorrectDate ?
             // onAddButtonPressed,
-            () => _bloc.add(AddAppointmentEvent()),
+            () => context
+                .read<AppointmentsBloc>()
+                .add(AddAppointmentEvent(selectedDay)),
         // : null,
-        backgroundColor:
-            Provider.of<CalendarScreenProvider>(context).isFutureDate
-                ? Theme.of(context).accentColor
-                : Color(0xffed6056),
+        backgroundColor: Theme.of(context).accentColor,
+        // Provider.of<CalendarScreenProvider>(context).isFutureDate
+        //     ? Theme.of(context).accentColor
+        //     : Color(0xffed6056),
         elevation: 5,
         child: Icon(Icons.add),
       ),

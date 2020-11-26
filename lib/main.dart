@@ -4,10 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:yadonor/data/calendar/appointments_service.dart';
-// import 'package:yadonor/providers/calendar_screen_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
-
+import 'package:yadonor/ui/calendar/appointments_bloc.dart';
 import 'package:yadonor/ui/main_screen.dart';
 import 'package:yadonor/ui/calendar/calendar_add_screen.dart';
 import 'package:yadonor/ui/calendar/calendar_screen.dart';
@@ -60,52 +59,62 @@ class DonorApp extends StatelessWidget {
 
     return Provider<AppointmentsRepository>(
       create: (ctx) => AppointmentsRepository(AppointmentsStorage()),
-      child: MaterialApp(
-        localizationsDelegates: [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: [
-          const Locale('ru'),
-        ],
-        title: 'YaDonor',
-        theme: ThemeData(
-          primaryColor: const Color(0xff00608a),
-          accentColor: const Color(0xffe9392c),
-          scaffoldBackgroundColor: const Color(0xfff9fafc),
-          fontFamily: 'PTSans',
-          appBarTheme: AppBarTheme(
-            color: Colors.white,
-            iconTheme: IconThemeData(
-              color: Theme.of(context).primaryColor,
-            ),
-          ),
-          textTheme: TextTheme(
-            headline1: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-            bodyText1: TextStyle(fontSize: 18),
-          ),
-          buttonTheme: ButtonThemeData(
-            buttonColor: Theme.of(context).accentColor,
-          ),
-          dividerColor: Theme.of(context).primaryColor,
-        ),
-        home: (user != null) ? MainScreen() : AuthScreen(),
-        routes: {
-          MainScreen.routeName: (ctx) => MainScreen(),
-          AuthScreen.routeName: (ctx) => AuthScreen(),
-          PreQuestionaryScreen.routeName: (ctx) => PreQuestionaryScreen(),
-          QuestionaryScreen.routeName: (ctx) => QuestionaryScreen(),
-          QuestionaryResultScreen.routeName: (ctx) => QuestionaryResultScreen(),
-          PrecautionsScreen.routeName: (ctx) => PrecautionsScreen(),
-          CalendarScreen.routeName: (ctx) => CalendarScreen(),
-          AddressScreen.routeName: (ctx) => AddressScreen(),
-          CalendarAddScreen.routeName: (ctx) => CalendarAddScreen(),
+      child: BlocProvider<AppointmentsBloc>(
+        create: (BuildContext context) {
+          AppointmentsBloc _bloc = AppointmentsBloc(AppointmentsLoadingState(),
+              context.read<AppointmentsRepository>());
+          // _bloc.add(GetAppointmentsEvent());
+          return _bloc;
         },
+        child: MaterialApp(
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: [
+            const Locale('ru'),
+          ],
+          title: 'YaDonor',
+          theme: ThemeData(
+            primaryColor: const Color(0xff00608a),
+            accentColor: const Color(0xffe9392c),
+            scaffoldBackgroundColor: const Color(0xfff9fafc),
+            fontFamily: 'PTSans',
+            appBarTheme: AppBarTheme(
+              color: Colors.white,
+              iconTheme: IconThemeData(
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+            textTheme: TextTheme(
+              headline1: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+              // bodyText1: TextStyle(fontSize: 18),
+              bodyText2: TextStyle(fontSize: 18),
+            ),
+            buttonTheme: ButtonThemeData(
+              buttonColor: Theme.of(context).accentColor,
+            ),
+            dividerColor: Theme.of(context).primaryColor,
+          ),
+          home: (user != null) ? MainScreen() : AuthScreen(),
+          routes: {
+            MainScreen.routeName: (ctx) => MainScreen(),
+            AuthScreen.routeName: (ctx) => AuthScreen(),
+            PreQuestionaryScreen.routeName: (ctx) => PreQuestionaryScreen(),
+            QuestionaryScreen.routeName: (ctx) => QuestionaryScreen(),
+            QuestionaryResultScreen.routeName: (ctx) =>
+                QuestionaryResultScreen(),
+            PrecautionsScreen.routeName: (ctx) => PrecautionsScreen(),
+            CalendarScreen.routeName: (ctx) => CalendarScreen(),
+            AddressScreen.routeName: (ctx) => AddressScreen(),
+            CalendarAddScreen.routeName: (ctx) => CalendarAddScreen(),
+          },
+        ),
       ),
     );
   }

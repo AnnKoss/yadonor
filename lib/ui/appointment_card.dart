@@ -1,14 +1,12 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
-import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
 import 'package:yadonor/domain/appointment-item.dart';
 
 class AppointmentCard extends StatelessWidget {
   final Appointment appointment;
   final bool hasCloseIcon;
-  final void onRemoveButtonPressed;
+  final void Function() onRemoveButtonPressed;
 
   AppointmentCard({
     @required this.appointment,
@@ -18,27 +16,6 @@ class AppointmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Future<void> onRemoveButtonPressed() async {
-    //   print('try to delete');
-    //   try {
-    //     Provider.of<CalendarAppointmentRepository>(context, listen: false)
-    //         .removeAppointment(appointment.day);
-    //   } catch (error) {
-    //     showDialog(
-    //       context: context,
-    //       builder: (ctx) => AlertDialog(
-    //         content: Text('Ошибка: "${error.toString()}"'),
-    //         actions: <Widget>[
-    //           FlatButton(
-    //             onPressed: () => Navigator.of(ctx).pop(),
-    //             child: Text('Закрыть'),
-    //           )
-    //         ],
-    //       ),
-    //     );
-    //   }
-    // }
-
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Theme.of(context).accentColor,
@@ -58,7 +35,7 @@ class AppointmentCard extends StatelessWidget {
       subtitle: Text(appointment.appointment),
       trailing: hasCloseIcon ? IconButton(
         icon: Icon(Icons.close),
-        onPressed: () => onRemoveButtonPressed,
+        onPressed: onRemoveButtonPressed,
       ) : null,
     );
   }
