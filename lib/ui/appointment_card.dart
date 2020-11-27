@@ -35,7 +35,7 @@ class AppointmentCard extends StatelessWidget {
       subtitle: Text(appointment.appointment),
       trailing: hasCloseIcon ? IconButton(
         icon: Icon(Icons.close),
-        onPressed: onRemoveButtonPressed,
+        onPressed: () {onRemoveButtonPressed(); print('Remove AppointmentCard');},
       ) : null,
     );
   }

@@ -70,8 +70,8 @@ class _MainScreenState extends State<MainScreen> {
                       margin: EdgeInsets.only(bottom: 10),
                       child: BlocBuilder<AppointmentsBloc, AppointmentsState>(
                           builder: (context, state) {
-                        print(
-                            'main_screen incoming state: ' + state.toString());
+                        // print(
+                        //     'main_screen incoming state: ' + state.toString());
                         if (state is AppointmentsLoadingState) {
                           return Container(
                             margin: EdgeInsets.all(10),
@@ -79,15 +79,15 @@ class _MainScreenState extends State<MainScreen> {
                           );
                         }
                         if (state is AppointmentsLoadedState) {
-                          print('main_screen appointmentsList: ');
-                          print(state.appointmentsList.appointments);
-                          print('nearestAppointment: ');
-                          print(state.appointmentsList.nearestAppointment);
+                          // print('main_screen appointmentsList: ');
+                          // print(state.appointmentsList.appointments);
+                          // print('nearestAppointment: ');
+                          // print(state.appointmentsList.nearestAppointment);
                           return (state.appointmentsList.nearestAppointment !=
                                   null)
                               ? Container(
                                   margin: EdgeInsets.all(10),
-                                  width: 300,
+                                  width: 250,
                                   child: AppointmentCard(
                                     appointment: state
                                         .appointmentsList.nearestAppointment,

@@ -20,20 +20,28 @@ class AppointmentListFiltered extends StatefulWidget {
 }
 
 class _AppointmentListFilteredState extends State<AppointmentListFiltered> {
+  // List<Appointment> displayedAppointments = [];
+
   @override
   Widget build(BuildContext context) {
+    print('build AppointmentListFiltered');
     String appointmentsText = 'Донации в этом месяце:';
 
     return BlocBuilder<AppointmentsBloc, AppointmentsState>(
         builder: (context, state) {
-      if (state is AppointmentsLoadingState) {
-        // context.watch<AppointmentsBloc>.add(GetAppointmentsEvent());
-        return CircularProgressIndicator();
-      }
+      // if (state is AppointmentsLoadingState) {
+      //   // context.watch<AppointmentsBloc>.add(GetAppointmentsEvent());
+      //   // return CircularProgressIndicator();
+      // }
       if (state is AppointmentsLoadedState) {
-        print(state.appointmentsList.appointments);
-        List<Appointment> displayedAppointments =
-            state.appointmentsList.currentMonthAppointments(widget.firstVisibleDate);
+        print('AppointmentListFiltered AppointmentsLoadedState:' +
+            state.appointmentsList.appointments.toString());
+
+        List<Appointment> displayedAppointments = state.appointmentsList
+            .currentMonthAppointments(widget.firstVisibleDate);
+
+        print('AppointmentListFiltered displayedAppointments: ' +
+            displayedAppointments.toString());
 
         switch (widget.appointmentsFilter) {
           case FilterType.future:
@@ -87,7 +95,11 @@ class _AppointmentListFilteredState extends State<AppointmentListFiltered> {
                                       context.read<AppointmentsBloc>().add(
                                           RemoveAppointmentEvent(
                                               appointment.day));
-                                      // context.read<AppointmentsBloc>().add(GetAppointmentsEvent());  
+                                      displayedAppointments = state
+                                          .appointmentsList
+                                          .currentMonthAppointments(
+                                              widget.firstVisibleDate);
+                                      // context.read<AppointmentsBloc>().add(GetAppointmentsEvent());
                                     }),
                               ),
                             )

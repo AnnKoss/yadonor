@@ -88,6 +88,10 @@ class AppointmentsBloc extends Bloc<AppointmentsEvent, AppointmentsState> {
 
   List<Appointment> loadedAppointments;
 
+  int Function(Appointment, Appointment) appointmentComparator = (a, b) {
+    return a.day.compareTo(b.day);
+  };
+
   Stream<AppointmentsState> _performAddAppointment(
       AddAppointmentEvent event, AppointmentsState state) async* {
     yield AppointmentsLoadingState();
@@ -98,11 +102,14 @@ class AppointmentsBloc extends Bloc<AppointmentsEvent, AppointmentsState> {
       yield AppoitmentsErrorState();
     }
 
-    loadedAppointments = loadedAppointments
-      ..add(Appointment(
-        event.selectedDay,
-        'Донорство крови',
-      ));
+    loadedAppointments.add(Appointment(
+      event.selectedDay,
+      'Донорство крови',
+    ));
+
+    loadedAppointments.sort(appointmentComparator);
+
+    // sortAppointments(loadedAppointments);
 
     AppointmentsLoadedState appointmentsLoadedState = AppointmentsLoadedState(
       appointmentsList: AppointmentsList(appointments: loadedAppointments),
@@ -112,7 +119,7 @@ class AppointmentsBloc extends Bloc<AppointmentsEvent, AppointmentsState> {
         appointmentsLoadedState.appointmentsList.appointments.toString());
     print(appointmentsLoadedState.appointmentsList.appointments.length
             .toString() +
-        ' - number of state appointments');
+        ' - number of state appointments after adding');
 
     yield appointmentsLoadedState;
   }
@@ -127,11 +134,11 @@ class AppointmentsBloc extends Bloc<AppointmentsEvent, AppointmentsState> {
       yield AppoitmentsErrorState();
     }
 
-    final Appointment selectedAppointment = loadedAppointments
-        .firstWhere((appointment) => appointment.day == appointment.day);
+    // final Appointment selectedAppointment = loadedAppointments
+    //     .firstWhere((appointment) => appointment.day == event.day);
 
-    loadedAppointments = loadedAppointments
-      ..removeWhere((appointment) => appointment == selectedAppointment);
+    loadedAppointments
+        .removeWhere((appointment) => appointment.day == event.day);
 
     AppointmentsLoadedState appointmentsLoadedState = AppointmentsLoadedState(
       appointmentsList: AppointmentsList(appointments: loadedAppointments),
@@ -139,7 +146,7 @@ class AppointmentsBloc extends Bloc<AppointmentsEvent, AppointmentsState> {
 
     print(appointmentsLoadedState.appointmentsList.appointments.length
             .toString() +
-        ' - number of state appointments');
+        ' - number of state appointments after deleting');
 
     yield appointmentsLoadedState;
   }
@@ -149,8 +156,11 @@ class AppointmentsBloc extends Bloc<AppointmentsEvent, AppointmentsState> {
     yield AppointmentsLoadingState();
 
     if (loadedAppointments == null) {
-      loadedAppointments = await _service.getAppointments();
+      loadedAppointments = await _service.getAppointments()
+        ..sort(appointmentComparator);
     }
+
+    // sortAppointments(loadedAppointments);
 
     print('loadedAppointments: ' + loadedAppointments.toString());
 

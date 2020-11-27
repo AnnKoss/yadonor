@@ -7,8 +7,15 @@ class AppointmentsList {
   final List<Appointment> appointments;
   AppointmentsList({@required this.appointments});
 
+  // void sortAppointments() {
+  //   appointments
+  //     ..sort((a, b) {
+  //       return a.day.compareTo(b.day);
+  //     });
+  // }
+
   Appointment get nearestAppointment {
-    print('get nearestAppointment appointments: ' + appointments.toString());
+    // print('get nearestAppointment appointments: ' + appointments.toString());
     if (appointments != null) {
       // Appointment nearestAppointment = 
       return appointments.firstWhere((entry) {
@@ -24,7 +31,7 @@ class AppointmentsList {
   List<Appointment> get futureAppointments {
     return appointments.where(
         (entry) {
-          return entry.day.isAfter(DateTime.now().subtract(Duration(days: 1)));
+          return entry.day.isAfter(DateTime.now());
         },
       ).toList();
   }
@@ -44,9 +51,9 @@ class AppointmentsList {
         int year = firstVisibleDate.add(Duration(days: 15)).year;
         int month = firstVisibleDate.add(Duration(days: 15)).month;
         String currentMonth = DateFormat.yM().format(DateTime(year, month));
-        print('currentMonth: ' + currentMonth);
-        print('selectedAppointmentMonth: ' + selectedAppointmentMonth);
-        print('firstVisibleDate: ' + firstVisibleDate.toString());
+        // print('currentMonth: ' + currentMonth);
+        // print('selectedAppointmentMonth: ' + selectedAppointmentMonth);
+        // print('firstVisibleDate: ' + firstVisibleDate.toString());
 
         return selectedAppointmentMonth == currentMonth;
       },
