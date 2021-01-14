@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import 'package:yadonor/ui/main_drawer.dart';
+import 'package:yadonor/ui/common/main_drawer.dart';
 
 class PrecautionsScreen extends StatelessWidget {
   static const routeName = '/precautions';

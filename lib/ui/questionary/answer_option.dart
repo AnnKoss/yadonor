@@ -1,6 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 
-import 'package:yadonor/ui/button.dart';
+import 'package:yadonor/ui/common/button.dart';
 
 class AnswerOption extends StatelessWidget {
   final String answerText;

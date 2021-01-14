@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthService {
+class AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<User> login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     User user;
     try {
       UserCredential authResult = await _auth.signInWithEmailAndPassword(
@@ -14,11 +14,13 @@ class AuthService {
     } on FirebaseAuthException catch (error) {
       print('login failed: ' + error.code);
     }
-
-    return user;
+    if (user != null) {
+      return true;
+    } else
+      return false;
   }
 
-  Future<User> signUp(String email, String password) async {
+  Future<bool> signUp(String email, String password) async {
     User user;
     try {
       UserCredential authResult = await _auth.createUserWithEmailAndPassword(
@@ -34,13 +36,10 @@ class AuthService {
       print('signup failed: ' + error.code);
     }
 
-    return user;
-//  if (user != null) {
-//    Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
+     if (user != null) {
+      return true;
+    } else
+      return false;
 
-//    // sign in successfully
-//  } else {
-//    authenticationErrorDialog(context);
-//  }
   }
 }

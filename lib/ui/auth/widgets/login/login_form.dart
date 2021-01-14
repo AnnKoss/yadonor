@@ -1,6 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 
-import 'package:yadonor/ui/auth/auth_textformfield.dart';
+import 'package:yadonor/ui/auth/widgets/auth_textformfield.dart';
 import 'package:yadonor/data/auth/auth_validation.dart';
 
 class LogInForm extends StatelessWidget {

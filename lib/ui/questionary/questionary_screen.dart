@@ -5,7 +5,7 @@ import 'package:yadonor/domain/questionary-item.dart';
 import 'package:yadonor/ui/questionary/questionary_result_screen.dart';
 import 'package:yadonor/ui/questionary/answer_option.dart';
 import 'package:yadonor/ui/questionary/question_text.dart';
-import 'package:yadonor/ui/main_drawer.dart';
+import 'package:yadonor/ui/common/main_drawer.dart';
 
 class QuestionaryScreen extends StatefulWidget {
   static const routeName = '/questionary';

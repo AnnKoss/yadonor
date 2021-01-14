@@ -1,22 +1,32 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:surf_mwwm/surf_mwwm.dart';
 
-import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
-import 'package:yadonor/data/calendar_screen_view.dart';
+import 'package:yadonor/ui/calendar/calendar_screen.dart';
 import 'package:yadonor/ui/questionary/pre_questionary_screen.dart';
 import 'package:yadonor/ui/address/address_screen.dart';
-import 'package:yadonor/ui/main_screen_button.dart';
-import 'package:yadonor/ui/main_drawer.dart';
-import 'package:yadonor/ui/appointment_card.dart';
+import 'package:yadonor/ui/main_screen/main_screen_button.dart';
+import 'package:yadonor/ui/common/main_drawer.dart';
+import 'package:yadonor/ui/common/appointment_card.dart';
+import 'package:yadonor/ui/calendar/di/calendar.dart';
+import 'package:yadonor/ui/calendar/calendar_screen_wm.dart';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends MwwmWidget<CalendarComponent> {
+  MainScreen()
+      : super(
+          dependenciesBuilder: (context) =>
+              CalendarComponent(Navigator.of(context)),
+          widgetStateBuilder: () => _MainScreenState(),
+          widgetModelBuilder: (context) => CalendarWidgetModel(
+            context.read<WidgetModelDependencies>(),
+            // Navigator.of(context)),
+          ),
+        );
   static const routeName = '/main';
-  @override
-  _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends WidgetState<CalendarWidgetModel> {
   @override
   Widget build(BuildContext context) {
     print('build mainScreen');
@@ -45,8 +55,9 @@ class _MainScreenState extends State<MainScreen> {
               child: Card(
                 margin: EdgeInsets.symmetric(vertical: 10),
                 elevation: 3,
-                child: Consumer<CalendarAppointmentsProvider>(
-                  builder: (context, calendarAppointmentsData, child) {
+                child: StreamedStateBuilder<bool>(
+                  streamedState: wm.isLoading,
+                  builder: (context, isLoading) {
                     return Column(
                       children: <Widget>[
                         Container(
@@ -57,31 +68,27 @@ class _MainScreenState extends State<MainScreen> {
                           padding: EdgeInsets.only(top: 10),
                           width: double.infinity,
                         ),
-                        (Provider.of<CalendarAppointmentsProvider>(context)
-                                .isFetchAppointmentsLoading) //зачем?
+                        (isLoading)
                             ? Container(
                                 padding: EdgeInsets.symmetric(vertical: 5),
                                 child: CircularProgressIndicator(),
                               )
-                            : (calendarAppointmentsData
-                                        .getNearestAppointment() != // а если future?
-                                    null)
-                                ? Container(
-                                    margin: EdgeInsets.all(10),
-                                    child: AppointmentCard(
-                                      appointment: calendarAppointmentsData
-                                          .getNearestAppointment(),
-                                      hasCloseIcon: false,
-                                    ),
-                                  )
-                                : FlatButton(
-                                    onPressed: () => Navigator.of(context)
-                                        .pushNamed(
-                                            CalendarScreenView.routeName),
-                                    child: Text('Запланировать',
-                                        style: TextStyle(fontSize: 20)),
-                                    textColor: Theme.of(context).accentColor,
-                                  ),
+                            : Center(child: Text('nearestAppointment')),
+                        (wm.nearestAppointment != null)
+                            ? Container(
+                                margin: EdgeInsets.all(10),
+                                child: AppointmentCard(
+                                  appointment: wm.nearestAppointment,
+                                  hasCloseIcon: false,
+                                ),
+                              )
+                            : FlatButton(
+                                onPressed: () => Navigator.of(context)
+                                    .pushNamed(CalendarScreen.routeName),
+                                child: Text('Запланировать',
+                                    style: TextStyle(fontSize: 20)),
+                                textColor: Theme.of(context).accentColor,
+                              ),
                       ],
                     );
                   },
@@ -91,7 +98,7 @@ class _MainScreenState extends State<MainScreen> {
             SizedBox(height: 20),
             mainScreenButton(
               onPressed: () =>
-                  Navigator.of(context).pushNamed(CalendarScreenView.routeName),
+                  Navigator.of(context).pushNamed(CalendarScreen.routeName),
               buttonText: 'КАЛЕНДАРЬ',
             ),
             mainScreenButton(

@@ -2,40 +2,23 @@
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
+// import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
 import 'package:yadonor/domain/appointment-item.dart';
+import 'package:yadonor/ui/calendar/calendar_screen_wm.dart';
 
 class AppointmentCard extends StatelessWidget {
   final Appointment appointment;
   final bool hasCloseIcon;
+  final void Function() onRemoveButtonPressed;
 
   AppointmentCard({
     @required this.appointment,
     this.hasCloseIcon,
+    this.onRemoveButtonPressed
   });
 
   @override
   Widget build(BuildContext context) {
-    Future<void> onRemoveButtonPressed() async {
-      print('try to delete');
-      try {
-        Provider.of<CalendarAppointmentsProvider>(context, listen: false)
-            .removeAppointment(appointment.day);
-      } catch (error) {
-        showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            content: Text('Ошибка: "${error.toString()}"'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.of(ctx).pop(),
-                child: Text('Закрыть'),
-              )
-            ],
-          ),
-        );
-      }
-    }
 
     return ListTile(
       leading: CircleAvatar(

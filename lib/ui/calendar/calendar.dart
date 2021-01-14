@@ -4,10 +4,16 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
-import 'package:yadonor/data/providers/calendar_screen_provider.dart';
+// import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
+// import 'package:yadonor/data/providers/calendar_screen_provider.dart';
+import 'package:yadonor/domain/appointment-item.dart';
 
 class Calendar extends StatefulWidget {
+  final void Function(DateTime, List<dynamic>, List<dynamic>) onDaySelected;
+  final OnVisibleDaysChanged onVisibleDaysChanged;
+  final List<Appointment> appointments;
+  Calendar({this.onDaySelected, this.onVisibleDaysChanged, this.appointments});
+
   @override
   _CalendarState createState() => _CalendarState();
 }
@@ -34,9 +40,8 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    final calendarAppointmentsData = Provider.of<CalendarAppointmentsProvider>(context);
     final Map<DateTime, List> calendarAppointments = Map.fromIterable(
-        calendarAppointmentsData.appointments,
+        widget.appointments,
         key: (appointment) => appointment.day,
         value: (appointment) => [appointment.appointment]);
     print(calendarAppointments);
@@ -55,16 +60,10 @@ class _CalendarState extends State<Calendar> {
       ),
       startingDayOfWeek: StartingDayOfWeek.monday,
       locale: 'ru_Ru',
-      onDaySelected: Provider.of<CalendarScreenProvider>(context).selectDay,
+      onDaySelected: widget.onDaySelected,
       events: calendarAppointments,
       rowHeight: 40,
-      onVisibleDaysChanged: (from, to, format) {
-        Provider.of<CalendarScreenProvider>(context, listen: false)
-            .changeVisibleDates(from);
-        Provider.of<CalendarScreenProvider>(context, listen: false)
-            .getCurrentMonthAppointments();
-        // print(from);
-      },
+      onVisibleDaysChanged: widget.onVisibleDaysChanged,
     );
   }
 }

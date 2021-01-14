@@ -3,11 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:yadonor/main.dart';
 import 'package:yadonor/ui/auth/auth_screen.dart';
-import 'package:yadonor/ui/main_screen.dart';
+import 'package:yadonor/ui/main_screen/main_screen.dart';
 import 'package:yadonor/ui/address/address_screen.dart';
-import 'package:yadonor/ui/precautions_screen.dart';
+import 'package:yadonor/ui/precautions/precautions_screen.dart';
 import 'package:yadonor/ui/questionary/pre_questionary_screen.dart';
-import 'package:yadonor/data/calendar_screen_view.dart';
+import 'package:yadonor/ui/calendar/calendar_screen.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget buildListTile(
@@ -96,7 +96,7 @@ class MainDrawer extends StatelessWidget {
             Icons.event,
             'Календарь донаций',
             () => Navigator.of(context)
-                .pushReplacementNamed(CalendarScreenView.routeName),
+                .pushReplacementNamed(CalendarScreen.routeName),
           ),
           buildListTile(
             context,
