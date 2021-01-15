@@ -21,23 +21,6 @@ class RemoveAppointmentEvent extends AppointmentsEvent {
 
 class GetAppointmentsEvent extends AppointmentsEvent {}
 
-// class SelectDayEvent extends AppointmentsEvent {
-//   DateTime day;
-//   List<Appointment> appointments;
-
-//   SelectDayEvent(this.day, this.appointments);
-// }
-
-// class ChangeVisibleDatesEvent extends AppointmentsEvent {
-//   DateTime from;
-//   DateTime to;
-//   CalendarFormat format;
-
-//   ChangeVisibleDatesEvent(this.from, this.to, this.format);
-// }
-
-// class GetNearestAppointmentEvent extends AppointmentsEvent {}
-
 class AppointmentsState {}
 
 class AppointmentsLoadingState extends AppointmentsState {}
@@ -48,7 +31,6 @@ class AppointmentsLoadedState extends AppointmentsState {
 
   @override
   String toString() {
-    // TODO: implement toString
     if (appointmentsList != null) {
       return appointmentsList.appointments.toString();
     }
@@ -60,8 +42,6 @@ class AppoitmentsErrorState extends AppointmentsState {}
 
 class AppointmentsBloc extends Bloc<AppointmentsEvent, AppointmentsState> {
   final AppointmentsRepository _service;
-
-  // List<Appointment> appointments = [];
 
   AppointmentsBloc(AppointmentsState initialState, this._service)
       : super(initialState);
@@ -75,12 +55,6 @@ class AppointmentsBloc extends Bloc<AppointmentsEvent, AppointmentsState> {
       return _performRemoveAppointment(event, state);
     } else if (event is GetAppointmentsEvent) {
       return _performGetAppointments(event);
-      // } else if (event is SelectDayEvent) {
-      //   return _performSelectDay(event);
-      // } else if (event is ChangeVisibleDatesEvent) {
-      //   return _performChangeVisibleDates(event);
-      // } else if (event is GetNearestAppointmentEvent) {
-      //   return _performGetNearestAppointment(event);
     } else {
       throw UnimplementedError();
     }
@@ -109,8 +83,6 @@ class AppointmentsBloc extends Bloc<AppointmentsEvent, AppointmentsState> {
 
     loadedAppointments.sort(appointmentComparator);
 
-    // sortAppointments(loadedAppointments);
-
     AppointmentsLoadedState appointmentsLoadedState = AppointmentsLoadedState(
       appointmentsList: AppointmentsList(appointments: loadedAppointments),
     );
@@ -134,9 +106,6 @@ class AppointmentsBloc extends Bloc<AppointmentsEvent, AppointmentsState> {
       yield AppoitmentsErrorState();
     }
 
-    // final Appointment selectedAppointment = loadedAppointments
-    //     .firstWhere((appointment) => appointment.day == event.day);
-
     loadedAppointments
         .removeWhere((appointment) => appointment.day == event.day);
 
@@ -159,8 +128,6 @@ class AppointmentsBloc extends Bloc<AppointmentsEvent, AppointmentsState> {
       loadedAppointments = await _service.getAppointments()
         ..sort(appointmentComparator);
     }
-
-    // sortAppointments(loadedAppointments);
 
     print('loadedAppointments: ' + loadedAppointments.toString());
 

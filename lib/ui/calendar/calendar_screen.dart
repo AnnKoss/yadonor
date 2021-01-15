@@ -2,9 +2,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
-import 'package:yadonor/widgets/appointment_list_filtered.dart';
+import 'package:yadonor/ui/calendar/appointment_list_filtered.dart';
 import 'package:yadonor/ui/calendar/calendar.dart';
-import 'package:yadonor/ui/main_drawer.dart';
+import 'package:yadonor/ui/common/main_drawer.dart';
 import 'package:yadonor/ui/calendar/appointments_bloc.dart';
 import 'package:yadonor/domain/appointment-item.dart';
 

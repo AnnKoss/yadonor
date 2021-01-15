@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yadonor/ui/auth/widgets/signup/signup_form.dart';
 import 'package:yadonor/ui/auth/auth_bloc.dart';
 import 'package:yadonor/ui/auth/widgets/login/login_form.dart';
-import 'package:yadonor/ui/button.dart';
+import 'package:yadonor/ui/common/button.dart';
 
 // enum AuthMode { Signup, Login }
 

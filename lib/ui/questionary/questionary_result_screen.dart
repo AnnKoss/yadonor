@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:yadonor/ui/button.dart';
-import 'package:yadonor/ui/main_drawer.dart';
+import 'package:yadonor/ui/common/button.dart';
+import 'package:yadonor/ui/common/main_drawer.dart';
 
 class QuestionaryResultScreen extends StatelessWidget {
   static const routeName = '/questionary-result';

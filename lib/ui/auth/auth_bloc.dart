@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:yadonor/data/auth/auth_service.dart';
-import 'package:yadonor/ui/main_screen.dart';
+import 'package:yadonor/ui/main_screen/main_screen.dart';
 import 'package:yadonor/ui/auth/authentication_error_dialog.dart';
 
 abstract class AuthEvent {}

@@ -7,23 +7,11 @@ class AppointmentsList {
   final List<Appointment> appointments;
   AppointmentsList({@required this.appointments});
 
-  // void sortAppointments() {
-  //   appointments
-  //     ..sort((a, b) {
-  //       return a.day.compareTo(b.day);
-  //     });
-  // }
-
   Appointment get nearestAppointment {
-    // print('get nearestAppointment appointments: ' + appointments.toString());
     if (appointments != null) {
-      // Appointment nearestAppointment = 
       return appointments.firstWhere((entry) {
         return entry.day.isAfter(DateTime.now());
       }, orElse: () => null);
-      // print('nearestAppointment: ');
-      // print(nearestAppointment);
-      // return nearestAppointment;
     } else
       return null;
   }
@@ -51,10 +39,6 @@ class AppointmentsList {
         int year = firstVisibleDate.add(Duration(days: 15)).year;
         int month = firstVisibleDate.add(Duration(days: 15)).month;
         String currentMonth = DateFormat.yM().format(DateTime(year, month));
-        // print('currentMonth: ' + currentMonth);
-        // print('selectedAppointmentMonth: ' + selectedAppointmentMonth);
-        // print('firstVisibleDate: ' + firstVisibleDate.toString());
-
         return selectedAppointmentMonth == currentMonth;
       },
     ).toList();

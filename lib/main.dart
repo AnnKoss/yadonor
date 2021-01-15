@@ -7,7 +7,7 @@ import 'package:yadonor/data/calendar/appointments_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:yadonor/ui/calendar/appointments_bloc.dart';
-import 'package:yadonor/ui/main_screen.dart';
+import 'package:yadonor/ui/main_screen/main_screen.dart';
 import 'package:yadonor/ui/calendar/calendar_add_screen.dart';
 import 'package:yadonor/ui/calendar/calendar_screen.dart';
 import 'package:yadonor/ui/precautions_screen.dart';
@@ -58,7 +58,7 @@ class DonorApp extends StatelessWidget {
     final User user = _auth.currentUser;
 
     return Provider<AppointmentsRepository>(
-      create: (ctx) => AppointmentsRepository(AppointmentsStorage()),
+      create: (ctx) => AppointmentsRepository(),
       child: BlocProvider<AppointmentsBloc>(
         create: (BuildContext context) {
           AppointmentsBloc _bloc = AppointmentsBloc(AppointmentsLoadingState(),
