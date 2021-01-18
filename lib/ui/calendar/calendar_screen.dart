@@ -1,9 +1,6 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:surf_mwwm/surf_mwwm.dart';
 
-import 'package:yadonor/ui/calendar/di/calendar.dart';
 import 'package:yadonor/ui/calendar/calendar_screen_wm.dart';
 import 'package:yadonor/ui/calendar/widgets/appointment_list_filtered.dart';
 import 'package:yadonor/ui/calendar/calendar.dart';
@@ -11,16 +8,14 @@ import 'package:yadonor/ui/common/main_drawer.dart';
 
 ///Chooses whether to show events of the current month, all the future or all the past ones.
 
-class CalendarScreen extends MwwmWidget<CalendarComponent> {
+class CalendarScreen extends CoreMwwmWidget {
   CalendarScreen()
       : super(
-          dependenciesBuilder: (context) =>
-              CalendarComponent(Navigator.of(context)),
-          widgetStateBuilder: () => _CalendarScreenState(),
-          widgetModelBuilder: (context) => CalendarWidgetModel(
-            context.read<WidgetModelDependencies>(),
-          ),
+          widgetModelBuilder: (context) => CalendarWidgetModel.buildCalendarWM(context),
         );
+
+  @override
+  State<StatefulWidget> createState() => _CalendarScreenState();
 
   static const routeName = '/calendar';
 }
@@ -75,7 +70,7 @@ class _CalendarScreenState extends WidgetState<CalendarWidgetModel> {
                                 elevation: 3,
                                 margin: EdgeInsets.only(top: 10),
                                 child: Calendar(
-                                  onDaySelected: (day, appointments, _) {
+                                  onDaySelected: (day, appointments) {
                                     wm.selectDay(day, appointments);
                                   },
                                   onVisibleDaysChanged: (from, to, format) {
@@ -111,11 +106,12 @@ class _CalendarScreenState extends WidgetState<CalendarWidgetModel> {
                               elevation: 3,
                               margin: EdgeInsets.only(top: 10),
                               child: Calendar(
-                                onDaySelected: (day, appointments, _) {
+                                onDaySelected: (day, appointments) {
                                   wm.selectDay(day, appointments);
                                 },
                                 onVisibleDaysChanged: (from, to, format) {
                                   wm.changeVisibleDates(from);
+                                  wm.getCurrentMonthAppointments();
                                 },
                                 appointments: wm.appointments.value.data,
                               ),

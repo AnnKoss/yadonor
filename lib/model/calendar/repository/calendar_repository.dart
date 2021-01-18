@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
-import 'package:yadonor/domain/appointment-item.dart';
+import 'package:yadonor/data/appointment-item.dart';
 
 class AppointmentsStorage {
   List<Appointment> appointments = [];
@@ -15,6 +15,8 @@ class AppointmentsRepository {
   final AppointmentsStorage _storage;
 
   AppointmentsRepository(this._storage);
+
+  static AppointmentsRepository globalAppointmentsRepository;
 
   Future<List<Appointment>> getAppointments() async {
     final String userId = FirebaseAuth.instance.currentUser.uid;
@@ -52,6 +54,7 @@ class AppointmentsRepository {
 
       sortAppointments();
 
+      print(' _storage.appointments: ' +  _storage.appointments.toString());
       return _storage.appointments;
 
     } catch (error) {

@@ -7,25 +7,21 @@ import 'package:yadonor/model/auth/repository/auth_repository.dart';
 class LoginPerformer
     extends FuturePerformer<bool, Login> {
   final AuthRepository _service;
-  final String email;
-  final String password;
   
-  LoginPerformer(this._service, this.email, this.password);
+  LoginPerformer(this._service);
 
   @override
   Future<bool> perform(Login change) =>
-      _service.login(email, password);
+      _service.login(change.email, change.password);
 }
 
 class SignUpPerformer
     extends FuturePerformer<bool, Login> {
   final AuthRepository _service;
-  final String email;
-  final String password;
   
-  SignUpPerformer(this._service, this.email, this.password);
+  SignUpPerformer(this._service);
 
   @override
   Future<bool> perform(Login change) =>
-      _service.signUp(email, password);
+      _service.signUp(change.email, change.password);
 }

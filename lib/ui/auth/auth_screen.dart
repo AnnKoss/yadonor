@@ -1,22 +1,22 @@
-﻿import 'package:flutter/material.dart';
-import 'package:surf_mwwm/surf_mwwm.dart';
-import 'package:provider/provider.dart';
+﻿// import 'dart:js';
 
-import 'package:yadonor/ui/auth/di/auth.dart';
+import 'package:flutter/material.dart';
+import 'package:surf_mwwm/surf_mwwm.dart';
+
 import 'package:yadonor/ui/auth/auth_screen_wm.dart';
 import 'package:yadonor/ui/auth/widgets/signup/signup_form.dart';
 import 'package:yadonor/ui/auth/widgets/login/login_form.dart';
 import 'package:yadonor/ui/common/button.dart';
 
-class AuthScreen extends MwwmWidget<AuthComponent> {
+class AuthScreen extends CoreMwwmWidget {
   AuthScreen()
       : super(
-          dependenciesBuilder: (context) =>
-              AuthComponent(Navigator.of(context)),
-          widgetStateBuilder: () => _AuthScreenState(),
-          widgetModelBuilder: (context) => AuthWidgetModel(
-              context.read<WidgetModelDependencies>(), Navigator.of(context)),
+          widgetModelBuilder: (context) =>
+              AuthWidgetModel.buildAuthScreenWM(context),
         );
+  @override
+  State<StatefulWidget> createState() => _AuthScreenState();
+
   static const routeName = '/auth';
 }
 

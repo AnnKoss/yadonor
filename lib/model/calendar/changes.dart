@@ -1,5 +1,5 @@
 import 'package:surf_mwwm/surf_mwwm.dart';
-import 'package:yadonor/domain/appointment-item.dart';
+import 'package:yadonor/data/appointment-item.dart';
 
 class GetAppointments extends FutureChange<List<Appointment>> {}
 

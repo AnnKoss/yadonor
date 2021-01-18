@@ -2,14 +2,31 @@ import 'package:flutter/material.dart' hide Action;
 import 'package:surf_mwwm/surf_mwwm.dart';
 import 'package:intl/intl.dart';
 
-import 'package:yadonor/domain/appointment-item.dart';
+import 'package:yadonor/data/appointment-item.dart';
 import 'package:yadonor/model/calendar/repository/calendar_repository.dart';
 import 'package:yadonor/model/calendar/changes.dart';
+import 'package:yadonor/model/calendar/performers.dart';
 
 enum FilterType { future, past, current }
 
-/// WidgetModel for calendar_screen
+/// WidgetModel used in calendar_screen, main_screen, appointments_list_filtered
 class CalendarWidgetModel extends WidgetModel {
+  static CalendarWidgetModel _wm;
+
+  static WidgetModel buildCalendarWM(BuildContext context) {
+    if (_wm != null) return _wm;
+    _wm = CalendarWidgetModel(
+      WidgetModelDependencies(),
+      Model([
+        GetAppointmentsPerformer(
+          AppointmentsRepository.globalAppointmentsRepository,
+        ),
+      ]),
+    );
+    return _wm;
+  }
+  //is this bit of code legal?
+
   EntityStreamedState<List<Appointment>> appointments =
       EntityStreamedState(EntityState.loading([]));
 
@@ -17,10 +34,10 @@ class CalendarWidgetModel extends WidgetModel {
 
   CalendarWidgetModel(
     WidgetModelDependencies dependencies,
-    // Model model,
+    Model model,
   ) : super(
           dependencies,
-          // model: model,
+          model: model,
         );
 
   Action onAddAppointmentTap = Action<void>();
@@ -35,9 +52,9 @@ class CalendarWidgetModel extends WidgetModel {
     subscribe(
       onAddAppointmentTap.stream,
       (_) {
-        // isLoading.accept(!isLoading.value);
+        isLoading.accept(!isLoading.value);
         _addAppointment();
-        // isLoading.accept(!isLoading.value);
+        isLoading.accept(!isLoading.value);
       },
     );
   }
@@ -68,9 +85,12 @@ class CalendarWidgetModel extends WidgetModel {
     return nearestAppointment;
   }
 
+  List<Appointment> currentMonthAppointments = [];
+
   /// Appointments of current month.
-  List<Appointment>   getCurrentMonthAppointments() {
-    List<Appointment> currentMonthAppointments;
+  // List<Appointment> 
+  void getCurrentMonthAppointments() {
+    // List<Appointment> currentMonthAppointments = [];
     doFuture(
       model.perform(GetAppointments()),
       (appointments) {
@@ -84,42 +104,43 @@ class CalendarWidgetModel extends WidgetModel {
             return selectedAppointmentMonth == currentMonth;
           },
         ).toList();
+        print('getCurrentMonthAppointments() appointments: ' + appointments.toString());
       },
     );
-    return currentMonthAppointments;
+    // print('getCurrentMonthAppointments(): ' +
+    //     currentMonthAppointments.toString());
+    // return currentMonthAppointments;
   }
 
-  List<Appointment> get futureAppointments {
-    List<Appointment> futureAppointments;
+  List<Appointment> getFutureAppointments() {
+    List<Appointment> futureAppointments = [];
     doFuture(
       model.perform(GetAppointments()),
       (appointments) {
         futureAppointments = appointments.where(
-        (entry) {
-          return entry.day.isAfter(DateTime.now());
-        },
-      ).toList();
+          (entry) {
+            return entry.day.isAfter(DateTime.now());
+          },
+        ).toList();
       },
     );
     return futureAppointments;
   }
 
-  List<Appointment> get pastAppointments {
-    List<Appointment> pastAppointments;
+  List<Appointment> getPastAppointments() {
+    List<Appointment> pastAppointments = [];
     doFuture(
       model.perform(GetAppointments()),
       (appointments) {
         pastAppointments = appointments.where(
-        (entry) {
-          return entry.day.isBefore(DateTime.now());
-        },
-      ).toList();
+          (entry) {
+            return entry.day.isBefore(DateTime.now());
+          },
+        ).toList();
       },
     );
     return pastAppointments;
   }
-
-
 
   DateTime selectedDay = DateTime.now();
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:yadonor/data/dictionaries/question_list.dart';
-import 'package:yadonor/domain/questionary-item.dart';
+import 'package:yadonor/model/dictionaries/question_list.dart';
+import 'package:yadonor/data/questionary-item.dart';
 import 'package:yadonor/ui/questionary/questionary_result_screen.dart';
 import 'package:yadonor/ui/questionary/answer_option.dart';
 import 'package:yadonor/ui/questionary/question_text.dart';

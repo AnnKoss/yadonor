@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:yadonor/model/calendar/repository/calendar_repository.dart';
 
 import 'package:yadonor/ui/main_screen/main_screen.dart';
 import 'package:yadonor/ui/calendar/widgets/calendar_add_screen.dart';
@@ -12,6 +13,7 @@ import 'package:yadonor/ui/questionary/pre_questionary_screen.dart';
 import 'package:yadonor/ui/questionary/questionary_screen.dart';
 import 'package:yadonor/ui/auth/auth_screen.dart';
 import 'package:yadonor/ui/address/address_screen.dart';
+import 'package:yadonor/model/calendar/repository/calendar_repository.dart';
 
 // AuthWidgetModel createAuthModel(BuildContext context) =>
 //     AuthWidgetModel(
@@ -63,6 +65,9 @@ class DonorApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final User user = _auth.currentUser;
+
+    AppointmentsRepository.globalAppointmentsRepository = AppointmentsRepository(AppointmentsStorage());
+    //FIXME
 
     return MaterialApp(
       localizationsDelegates: [

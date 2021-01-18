@@ -1,15 +1,11 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-// import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
-// import 'package:yadonor/data/providers/calendar_screen_provider.dart';
-import 'package:yadonor/domain/appointment-item.dart';
+import 'package:yadonor/data/appointment-item.dart';
 
 class Calendar extends StatefulWidget {
-  final void Function(DateTime, List<dynamic>, List<dynamic>) onDaySelected;
+  final void Function(DateTime, List<dynamic>) onDaySelected;
   final OnVisibleDaysChanged onVisibleDaysChanged;
   final List<Appointment> appointments;
   Calendar({this.onDaySelected, this.onVisibleDaysChanged, this.appointments});

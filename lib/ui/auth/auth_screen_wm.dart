@@ -1,20 +1,40 @@
 ﻿import 'package:flutter/material.dart' hide Action;
 import 'package:surf_mwwm/surf_mwwm.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:yadonor/model/auth/repository/auth_repository.dart';
 
 import 'package:yadonor/ui/main_screen/main_screen.dart';
 import 'package:yadonor/model/auth/changes.dart';
+import 'package:yadonor/model/auth/performers.dart';
 
 /// WidgetModel for auth_screen
 class AuthWidgetModel extends WidgetModel {
+  static WidgetModel buildAuthScreenWM(BuildContext context) {
+    return AuthWidgetModel(
+      WidgetModelDependencies(),
+      Model([
+        LoginPerformer(
+          AuthRepository(),
+        ),
+        SignUpPerformer(
+          AuthRepository(),
+        ),
+      ]),
+      Navigator.of(context),
+    );
+  }
+
+  final NavigatorState navigator;
   final isLoading = StreamedState<bool>(false);
 
   AuthWidgetModel(
     WidgetModelDependencies dependencies,
+    Model model,
     this.navigator,
-  ) : super(dependencies);
+  ) : super(
+          dependencies,
+          model: model,
+        );
 
-  final NavigatorState navigator;
   Action submitLoginAction = Action<void>();
   Action submitSignUpAction = Action<void>();
 

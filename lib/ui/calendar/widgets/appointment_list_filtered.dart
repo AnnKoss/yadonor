@@ -2,24 +2,20 @@
 import 'package:surf_mwwm/surf_mwwm.dart';
 
 import 'package:yadonor/ui/calendar/calendar_screen_wm.dart';
-import 'package:yadonor/domain/appointment-item.dart';
+import 'package:yadonor/data/appointment-item.dart';
 import 'package:yadonor/ui/common/appointment_card.dart';
-import 'package:yadonor/ui/calendar/di/calendar.dart';
 
 ///List of future, past or present [Appointment] for calendar_screen.dart according to [FilterType].
-class AppointmentListFiltered extends MwwmWidget<CalendarComponent> {
-
+class AppointmentListFiltered extends CoreMwwmWidget {
   AppointmentListFiltered()
-      // : super(
-      //     dependenciesBuilder: (context) =>
-      //         CalendarComponent(Navigator.of(context)),
-      //     widgetStateBuilder: () => _AppointmentListFilteredState(),
-      //     widgetModelBuilder: (context) => CalendarWidgetModel(
-      //       context.read<WidgetModelDependencies>(),
-      //       // Navigator.of(context)),
-      //     ),
-      //   );
-      ;
+      : super(
+          widgetModelBuilder: (context) =>
+              CalendarWidgetModel.buildCalendarWM(context),
+          // Navigator.of(context)),
+        );
+
+  @override
+  State<StatefulWidget> createState() => _AppointmentListFilteredState();
 }
 
 class _AppointmentListFilteredState extends WidgetState<CalendarWidgetModel> {
@@ -34,28 +30,26 @@ class _AppointmentListFilteredState extends WidgetState<CalendarWidgetModel> {
       streamedState: wm.isLoading,
       builder: (context, isLoading) {
         List<Appointment> displayedAppointments =
-            wm.getCurrentMonthAppointments();
+            wm.currentMonthAppointments;
 
         print('AppointmentListFiltered displayedAppointments: ' +
             displayedAppointments.toString());
 
         switch (wm.appointmentsFilter) {
           case FilterType.future:
-            displayedAppointments = wm.futureAppointments;
+            displayedAppointments = wm.getFutureAppointments();
             appointmentsText = 'Предстоящие донации:';
             break;
           case FilterType.past:
-            displayedAppointments = wm.pastAppointments;
+            displayedAppointments = wm.getPastAppointments();
             appointmentsText = 'Прошедшие донации:';
             break;
           case FilterType.current:
-            displayedAppointments =
-                wm.getCurrentMonthAppointments();
+            displayedAppointments = wm.currentMonthAppointments;
             // print(displayedAppointments);
             break;
           default:
-            displayedAppointments =
-                wm.getCurrentMonthAppointments();
+            displayedAppointments = wm.currentMonthAppointments;
             appointmentsText = 'Донации в этом месяце:';
             // print(displayedAppointments);
             break;

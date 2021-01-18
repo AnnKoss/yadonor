@@ -1,10 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
-// import 'package:yadonor/data/providers/calendar_appointments_provider.dart';
-import 'package:yadonor/domain/appointment-item.dart';
-import 'package:yadonor/ui/calendar/calendar_screen_wm.dart';
+import 'package:yadonor/data/appointment-item.dart';
 
 class AppointmentCard extends StatelessWidget {
   final Appointment appointment;

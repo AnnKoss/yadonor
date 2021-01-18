@@ -1,6 +1,6 @@
 import 'package:surf_mwwm/surf_mwwm.dart';
 
-import 'package:yadonor/domain/appointment-item.dart';
+import 'package:yadonor/data/appointment-item.dart';
 import 'package:yadonor/model/calendar/changes.dart';
 import 'package:yadonor/model/calendar/repository/calendar_repository.dart';
 
