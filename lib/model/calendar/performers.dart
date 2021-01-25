@@ -23,3 +23,13 @@ class AddAppointmentPerformer extends FuturePerformer<void, AddAppointment> {
   Future<void> perform(AddAppointment change) =>
       _service.addAppointment(selectedDay);
 }
+
+class RemoveAppointmentPerformer extends FuturePerformer<void, RemoveAppointment> {
+  RemoveAppointmentPerformer(this._service, this.selectedDay);
+  final AppointmentsRepository _service;
+  final DateTime selectedDay;
+
+  @override
+  Future<void> perform(RemoveAppointment change) =>
+      _service.removeAppointment(selectedDay);
+}

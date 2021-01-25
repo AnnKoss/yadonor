@@ -7,3 +7,8 @@ class AddAppointment extends FutureChange<void> {
   final DateTime selectedDay;
   AddAppointment(this.selectedDay);
 }
+
+class RemoveAppointment extends FutureChange<void> {
+  final DateTime selectedDay;
+  RemoveAppointment(this.selectedDay);
+}

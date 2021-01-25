@@ -1,6 +1,9 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'dart:js';
+
+import 'package:flutter/material.dart';
 import 'package:surf_mwwm/surf_mwwm.dart';
 
+import 'package:yadonor/data/appointment-item.dart';
 import 'package:yadonor/ui/calendar/calendar_screen_wm.dart';
 import 'package:yadonor/ui/calendar/widgets/appointment_list_filtered.dart';
 import 'package:yadonor/ui/calendar/calendar.dart';
@@ -11,7 +14,8 @@ import 'package:yadonor/ui/common/main_drawer.dart';
 class CalendarScreen extends CoreMwwmWidget {
   CalendarScreen()
       : super(
-          widgetModelBuilder: (context) => CalendarWidgetModel.buildCalendarWM(context),
+          widgetModelBuilder: (context) =>
+              CalendarWidgetModel.buildCalendarWM(context),
         );
 
   @override
@@ -58,71 +62,73 @@ class _CalendarScreenState extends WidgetState<CalendarWidgetModel> {
           ],
         ),
         drawer: MainDrawer(),
-        body: StreamedStateBuilder<bool>(
-          streamedState: wm.isLoading,
-          builder: (context, isLoading) {
-            return (isLoading)
-                ? Column(
-                    children: <Widget>[
-                      Container(
-                        child: (wm.appointmentsFilter == FilterType.current)
-                            ? Card(
-                                elevation: 3,
-                                margin: EdgeInsets.only(top: 10),
-                                child: Calendar(
-                                  onDaySelected: (day, appointments) {
-                                    wm.selectDay(day, appointments);
-                                  },
-                                  onVisibleDaysChanged: (from, to, format) {
-                                    setState(() {
-                                      wm.changeVisibleDates(from);
-                                    });
-                                    wm.getCurrentMonthAppointments();
-                                  },
-                                  appointments: [],
-                                ),
-                              )
-                            : SizedBox(height: 0),
-                      ),
-                      Flexible(
-                        fit: FlexFit.loose,
-                        child: Stack(
-                          children: <Widget>[
-                            AppointmentListFiltered(),
-                            Container(
-                                width: double.infinity,
-                                height: double.infinity,
-                                color: Color(0xffffff).withOpacity(0.3)),
-                            Center(child: CircularProgressIndicator()),
-                          ],
+        body: EntityStateBuilder<List<Appointment>>(
+          streamedState: wm.appointments,
+          child: (context, appointments) {
+            return Column(children: <Widget>[
+              Container(
+                child: (wm.appointmentsFilter == FilterType.current)
+                    ? Card(
+                        elevation: 3,
+                        margin: EdgeInsets.only(top: 10),
+                        child: Calendar(
+                          onDaySelected: (day, appointments) {
+                            wm.selectDay(day, appointments);
+                          },
+                          onVisibleDaysChanged: (from, to, format) {
+                            wm.onChangeVisibleDates.accept(from);
+                            //how to pass arguments from UI to WM?
+                            wm.getCurrentMonthAppointments();
+                          },
+                          appointments: wm.appointments.value.data,
                         ),
-                      ),
+                      )
+                    : SizedBox(height: 0),
+              ),
+              Flexible(
+                fit: FlexFit.loose,
+                child: AppointmentListFiltered(),
+              ),
+            ]);
+          },
+          loadingBuilder: (context, appointments) {
+            return Column(
+              children: <Widget>[
+                Container(
+                  child: (wm.appointmentsFilter == FilterType.current)
+                      ? Card(
+                          elevation: 3,
+                          margin: EdgeInsets.only(top: 10),
+                          child: Calendar(
+                            onDaySelected: (day, appointments) {
+                              wm.selectDay(day, appointments);
+                            },
+                            onVisibleDaysChanged: (from, to, format) {
+                              setState(() {
+                                wm.changeVisibleDates(from);
+                              });
+                              wm.getCurrentMonthAppointments();
+                            },
+                            appointments: [],
+                          ),
+                        )
+                      : SizedBox(height: 0),
+                ),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: Stack(
+                    children: <Widget>[
+                      AppointmentListFiltered(),
+                      Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          color: Color(0xffffff).withOpacity(0.3)),
+                      Center(child: CircularProgressIndicator()),
                     ],
-                  )
-                : Column(children: <Widget>[
-                    Container(
-                      child: (wm.appointmentsFilter == FilterType.current)
-                          ? Card(
-                              elevation: 3,
-                              margin: EdgeInsets.only(top: 10),
-                              child: Calendar(
-                                onDaySelected: (day, appointments) {
-                                  wm.selectDay(day, appointments);
-                                },
-                                onVisibleDaysChanged: (from, to, format) {
-                                  wm.changeVisibleDates(from);
-                                  wm.getCurrentMonthAppointments();
-                                },
-                                appointments: wm.appointments.value.data,
-                              ),
-                            )
-                          : SizedBox(height: 0),
-                    ),
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: AppointmentListFiltered(),
-                    ),
-                  ]);
+                  ),
+                ),
+              ],
+            );
           },
         ),
 

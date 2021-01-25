@@ -42,6 +42,7 @@ class CalendarWidgetModel extends WidgetModel {
 
   Action onAddAppointmentTap = Action<void>();
   Action onRemoveAppointmentTap = Action<void>();
+  Action onChangeVisibleDates = Action<void Function(DateTime from)>();
 
   @override
   onLoad() {
@@ -52,8 +53,33 @@ class CalendarWidgetModel extends WidgetModel {
     subscribe(
       onAddAppointmentTap.stream,
       (_) {
+        appointments.loading();
+        try {
+          _addAppointment();
+        } catch (e) {
+          appointments.error(e);
+        }
+      },
+    );
+    // is this one better than the following?
+
+    subscribe(
+      onRemoveAppointmentTap.stream,
+      (_) {
         isLoading.accept(!isLoading.value);
-        _addAppointment();
+        _removeAppointment();
+        isLoading.accept(!isLoading.value);
+      },
+    );
+
+    subscribe(
+      onChangeVisibleDates.stream,
+      (_) {
+        DateTime from = onChangeVisibleDates.value;
+        // what should be here?
+        isLoading.accept(!isLoading.value);
+        changeVisibleDates(from);
+        // how to get arguments from UI?
         isLoading.accept(!isLoading.value);
       },
     );
@@ -72,6 +98,10 @@ class CalendarWidgetModel extends WidgetModel {
     doFuture(model.perform(AddAppointment(selectedDay)), (t) => null);
   }
 
+  void _removeAppointment() {
+    doFuture(model.perform(RemoveAppointment(selectedDay)), (t) => null);
+  }
+
   Appointment get nearestAppointment {
     Appointment nearestAppointment;
     doFuture(
@@ -88,7 +118,7 @@ class CalendarWidgetModel extends WidgetModel {
   List<Appointment> currentMonthAppointments = [];
 
   /// Appointments of current month.
-  // List<Appointment> 
+  // List<Appointment>
   void getCurrentMonthAppointments() {
     // List<Appointment> currentMonthAppointments = [];
     doFuture(
@@ -104,7 +134,8 @@ class CalendarWidgetModel extends WidgetModel {
             return selectedAppointmentMonth == currentMonth;
           },
         ).toList();
-        print('getCurrentMonthAppointments() appointments: ' + appointments.toString());
+        print('getCurrentMonthAppointments() appointments: ' +
+            appointments.toString());
       },
     );
     // print('getCurrentMonthAppointments(): ' +
