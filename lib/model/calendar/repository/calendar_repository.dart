@@ -25,49 +25,45 @@ class AppointmentsRepository {
 
     if (_storage.appointments.isNotEmpty) {
       return _storage.appointments;
-    }
+    } else {
+      final List<Appointment> loadedAppointments = [];
 
-    final List<Appointment> loadedAppointments = [];
+      final String url = 'https://yadonor-app.firebaseio.com/$userId.json';
+      try {
+        final response = await http.get(url);
+        if (json.decode(response.body) != null) {
+          print('income json:');
+          print(json.decode(response.body));
+          final extractedData =
+              json.decode(response.body) as Map<String, dynamic>;
+          extractedData.forEach((key, value) {
+            loadedAppointments.add(
+              Appointment(
+                DateTime.parse(value['day']),
+                value['appointment'],
+              ),
+            );
+          });
+          print(extractedData.length.toString() +
+              ' - number of loaded appointments');
+        }
 
-    final String url = 'https://yadonor-app.firebaseio.com/$userId.json';
-    try {
-      final response = await http.get(url);
-      if (json.decode(response.body) != null) {
-        print('income json:');
-        print(json.decode(response.body));
-        final extractedData =
-            json.decode(response.body) as Map<String, dynamic>;
-        extractedData.forEach((key, value) {
-          loadedAppointments.add(
-            Appointment(
-              DateTime.parse(value['day']),
-              value['appointment'],
-            ),
-          );
-        });
-        print(extractedData.length.toString() + ' - number of loaded appointments');
+        print('appointments_servise getAppointments: ' +
+            loadedAppointments.toString());
+        _storage.appointments.clear();
+        _storage.appointments.addAll(loadedAppointments);
+
+        sortAppointments();
+      } catch (error) {
+        rethrow;
       }
 
-      print('appointments_servise getAppointments: ' + loadedAppointments.toString());
-      _storage.appointments.clear();
-      _storage.appointments.addAll(loadedAppointments);
-
-      sortAppointments();
-
-      print(' _storage.appointments: ' +  _storage.appointments.toString());
+      print(' _storage.appointments: ' + _storage.appointments.toString());
       return _storage.appointments;
-
-    } catch (error) {
-      // if (_storage.appointments.isEmpty) {
-      //   rethrow;
-      // }
-      rethrow;
     }
-    
-    // return _storage.appointments;
   }
 
-  Future<void> addAppointment(selectedDay) async {
+  Future<Appointment> addAppointment(selectedDay) async {
     final String userId = FirebaseAuth.instance.currentUser.uid;
     final String appointmentDate = DateFormat('y-M-d').format(selectedDay);
     final String url =
@@ -87,13 +83,14 @@ class AppointmentsRepository {
         selectedDay,
         'Донорство крови',
       ));
+      return Appointment(selectedDay, 'Донорство крови');
     } catch (error) {
       print(error);
       throw error;
     }
   }
 
-  Future<void> removeAppointment(DateTime day) async {
+  Future<Appointment> removeAppointment(DateTime day) async {
     ///Removes selected appointment from the server and the [_appointments] list.
     final String appointmentDate = DateFormat('y-M-d').format(day);
     final String userId = FirebaseAuth.instance.currentUser.uid;
@@ -110,6 +107,8 @@ class AppointmentsRepository {
         _storage.appointments
             .removeWhere((appointment) => appointment == selectedAppointment);
       }
+      print('removed appointment in repository: ' + day.toString());
+      return Appointment(day, 'Донорство крови');
     } catch (error) {
       print(error);
       throw error;
@@ -130,4 +129,40 @@ class AppointmentsRepository {
         return a.day.compareTo(b.day);
       });
   }
+
+  // DateTime _firstVisibleDate = DateTime(
+
+  //     /// The first date visible on the screen of current month. Used for changing displayed current month appointments in appointment_list_filtered.dart.
+  //     DateTime.now().year,
+  //     DateTime.now().month,
+  //     1);
+
+  // void changeVisibleDates(DateTime from) {
+  //   ///Changes displayed current month appointments in appointment_list_filtered.dart.
+  //   print('changeVisibleDates from: ' + from.toString());
+  //   _firstVisibleDate = from;
+
+  //   getCurrentMonthAppointments();
+  //   // print('currentMonthAppointments in changeVisibleDates: ' + currentMonthAppointments.toString());
+  // }
+
+  // /// Appointments of current month.
+  // List<Appointment> getCurrentMonthAppointments() {
+  //   List<Appointment> currentMonthAppointments = [];
+
+  //   currentMonthAppointments = _storage.appointments.where(
+  //     (entry) {
+  //       String selectedAppointmentMonth = DateFormat.yM().format(entry.day);
+  //       int year = _firstVisibleDate.add(Duration(days: 15)).year;
+  //       int month = _firstVisibleDate.add(Duration(days: 15)).month;
+  //       String currentMonth = DateFormat.yM().format(DateTime(year, month));
+
+  //       return selectedAppointmentMonth == currentMonth;
+  //     },
+  //   ).toList();
+
+  //   print('getCurrentMonthAppointments(): ' +
+  //       currentMonthAppointments.toString());
+  //   return currentMonthAppointments;
+  // }
 }

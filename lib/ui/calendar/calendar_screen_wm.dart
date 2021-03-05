@@ -9,29 +9,45 @@ import 'package:yadonor/model/calendar/performers.dart';
 
 enum FilterType { future, past, current }
 
+class CalendarState {
+  List<Appointment> appointments;
+
+  DateTime from = DateTime(DateTime.now().year, DateTime.now().month, 1);
+
+  List<Appointment> currentMonthAppointments() {
+    List<Appointment> currentMonthAppointments;
+    currentMonthAppointments = appointments.where(
+      (entry) {
+        String selectedAppointmentMonth = DateFormat.yM().format(entry.day);
+        int year = from.add(Duration(days: 15)).year;
+        int month = from.add(Duration(days: 15)).month;
+        String currentMonth = DateFormat.yM().format(DateTime(year, month));
+
+        return selectedAppointmentMonth == currentMonth;
+      },
+    ).toList();
+    print('CalendarState currentMonthAppointments: ' +
+        currentMonthAppointments.toString());
+    return currentMonthAppointments;
+  }
+}
+
+WidgetModel buildCalendarWM(BuildContext context) {
+  return CalendarWidgetModel(
+    WidgetModelDependencies(),
+    Model([
+      GetAppointmentsPerformer(
+          AppointmentsRepository.globalAppointmentsRepository),
+      AddAppointmentPerformer(
+          AppointmentsRepository.globalAppointmentsRepository),
+      RemoveAppointmentPerformer(
+          AppointmentsRepository.globalAppointmentsRepository)
+    ]),
+  );
+}
+
 /// WidgetModel used in calendar_screen, main_screen, appointments_list_filtered
 class CalendarWidgetModel extends WidgetModel {
-  static CalendarWidgetModel _wm;
-
-  static WidgetModel buildCalendarWM(BuildContext context) {
-    if (_wm != null) return _wm;
-    _wm = CalendarWidgetModel(
-      WidgetModelDependencies(),
-      Model([
-        GetAppointmentsPerformer(
-          AppointmentsRepository.globalAppointmentsRepository,
-        ),
-      ]),
-    );
-    return _wm;
-  }
-  //is this bit of code legal?
-
-  EntityStreamedState<List<Appointment>> appointments =
-      EntityStreamedState(EntityState.loading([]));
-
-  final isLoading = StreamedState<bool>(false);
-
   CalendarWidgetModel(
     WidgetModelDependencies dependencies,
     Model model,
@@ -40,47 +56,61 @@ class CalendarWidgetModel extends WidgetModel {
           model: model,
         );
 
-  Action onAddAppointmentTap = Action<void>();
-  Action onRemoveAppointmentTap = Action<void>();
-  Action onChangeVisibleDates = Action<void Function(DateTime from)>();
+  EntityStreamedState<CalendarState> streamedState =
+      EntityStreamedState(EntityState.loading());
+
+  CalendarState state = CalendarState();
+
+  // final isLoading = StreamedState<bool>(false);
+
+  final Action onDaySelected = Action<DateTime>();
+  final Action onAddAppointmentTap = Action<void>();
+  final Action onRemoveAppointmentTap = Action<DateTime>();
+  final Action onChangeVisibleDates = Action<DateTime>();
 
   @override
   onLoad() {
     super.onLoad();
-
+    print('onLoad');
     _getAppointments();
+
+    subscribe(
+      onDaySelected.stream,
+      (selectedDay) {
+        _selectDay(selectedDay);
+      },
+    );
 
     subscribe(
       onAddAppointmentTap.stream,
       (_) {
-        appointments.loading();
-        try {
-          _addAppointment();
-        } catch (e) {
-          appointments.error(e);
-        }
+        // streamedState.loading();
+        print('onAddAppointmentTap loading: ' + streamedState.toString());
+
+        _addAppointment();
+        // streamedState.accept(EntityState.content(state));
       },
     );
-    // is this one better than the following?
 
     subscribe(
       onRemoveAppointmentTap.stream,
-      (_) {
-        isLoading.accept(!isLoading.value);
-        _removeAppointment();
-        isLoading.accept(!isLoading.value);
+      (day) {
+        streamedState.loading();
+        print('currentMonthAppointments before removing: ' +
+            state.currentMonthAppointments().toString());
+        _removeAppointment(day);
+        streamedState.accept(EntityState.content(state));
+        print('currentMonthAppointments after removing: ' +
+            state.currentMonthAppointments().toString());
       },
     );
 
     subscribe(
       onChangeVisibleDates.stream,
-      (_) {
-        DateTime from = onChangeVisibleDates.value;
-        // what should be here?
-        isLoading.accept(!isLoading.value);
-        changeVisibleDates(from);
-        // how to get arguments from UI?
-        isLoading.accept(!isLoading.value);
+      (from) {
+        state.from = from;
+        print('changeVisibleDaysStream');
+        streamedState.accept(EntityState.content(state));
       },
     );
   }
@@ -88,108 +118,53 @@ class CalendarWidgetModel extends WidgetModel {
   void _getAppointments() {
     doFuture<List<Appointment>>(
       model.perform(GetAppointments()),
-      (appointments) {
-        this.appointments.content(appointments);
+      (loadedAppointments) {
+        state.appointments = loadedAppointments;
+        this.streamedState.accept(EntityState.content(state));
       },
     );
   }
 
-  void _addAppointment() {
-    doFuture(model.perform(AddAppointment(selectedDay)), (t) => null);
-  }
-
-  void _removeAppointment() {
-    doFuture(model.perform(RemoveAppointment(selectedDay)), (t) => null);
-  }
-
-  Appointment get nearestAppointment {
-    Appointment nearestAppointment;
-    doFuture(
-      model.perform(GetAppointments()),
-      (appointments) {
-        appointments.firstWhere((entry) {
-          nearestAppointment = entry.day.isAfter(DateTime.now());
-        }, orElse: nearestAppointment = null);
-      },
-    );
-    return nearestAppointment;
-  }
-
-  List<Appointment> currentMonthAppointments = [];
-
-  /// Appointments of current month.
-  // List<Appointment>
-  void getCurrentMonthAppointments() {
-    // List<Appointment> currentMonthAppointments = [];
-    doFuture(
-      model.perform(GetAppointments()),
-      (appointments) {
-        currentMonthAppointments = appointments.where(
-          (entry) {
-            String selectedAppointmentMonth = DateFormat.yM().format(entry.day);
-            int year = firstVisibleDate.add(Duration(days: 15)).year;
-            int month = firstVisibleDate.add(Duration(days: 15)).month;
-            String currentMonth = DateFormat.yM().format(DateTime(year, month));
-
-            return selectedAppointmentMonth == currentMonth;
-          },
-        ).toList();
-        print('getCurrentMonthAppointments() appointments: ' +
-            appointments.toString());
-      },
-    );
-    // print('getCurrentMonthAppointments(): ' +
-    //     currentMonthAppointments.toString());
-    // return currentMonthAppointments;
-  }
-
-  List<Appointment> getFutureAppointments() {
-    List<Appointment> futureAppointments = [];
-    doFuture(
-      model.perform(GetAppointments()),
-      (appointments) {
-        futureAppointments = appointments.where(
-          (entry) {
-            return entry.day.isAfter(DateTime.now());
-          },
-        ).toList();
-      },
-    );
-    return futureAppointments;
-  }
-
-  List<Appointment> getPastAppointments() {
-    List<Appointment> pastAppointments = [];
-    doFuture(
-      model.perform(GetAppointments()),
-      (appointments) {
-        pastAppointments = appointments.where(
-          (entry) {
-            return entry.day.isBefore(DateTime.now());
-          },
-        ).toList();
-      },
-    );
-    return pastAppointments;
-  }
-
-  DateTime selectedDay = DateTime.now();
-
-  void selectDay(DateTime day, List<Appointment> appointments) {
+  _selectDay(DateTime day) {
     ///A handler for [onDaySelected] property of Calendar widget.
     if (day != null) {
-      selectedDay = day;
+      _selectedDay = day;
     }
     selectedDayCheck(day);
     return;
   }
 
-  DateTime firstVisibleDate = DateTime(
+  void _addAppointment() {
+    doFuture<Appointment>(
+      model.perform(AddAppointment(_selectedDay)),
+      (Appointment addedAppointment) {
+        print('addedAppointment :' + addedAppointment.day.toString());
+        state.appointments.add(addedAppointment);
+        print('_addAppointment state.currentMonthAppointments:' +
+            state
+                .currentMonthAppointments()
+                .map((e) => e.day.toString())
+                .toString());
+        streamedState.accept(EntityState.content(state));
+      },
+    );
+  }
 
-      /// The first date visible on the screen of current month. Used for changing displayed current month appointments in appointment_list_filtered.dart.
-      DateTime.now().year,
-      DateTime.now().month,
-      1);
+  void _removeAppointment(day) {
+    doFuture(
+      model.perform(RemoveAppointment(day)),
+      (Appointment removedAppointment) {
+        state.appointments
+            .removeWhere((element) => element.day == removedAppointment.day);
+        print('removed appointment: ' + removedAppointment.toString());
+        state.currentMonthAppointments();
+        streamedState.accept(EntityState.content(state));
+        print('State after removing: ' + state.currentMonthAppointments().toString());
+      },
+    );
+  }
+
+  DateTime _selectedDay = DateTime.now();
 
   FilterType appointmentsFilter = FilterType.current;
 
@@ -199,7 +174,7 @@ class CalendarWidgetModel extends WidgetModel {
   //   {FilterType.current: 'Показать календарь'},
   // ];
 
-  ///is the [selectedDay] in the future (true) or in the past
+  ///is the [_selectedDay] in the future (true) or in the past
   bool isFutureDate = true;
 
   void selectedDayCheck(DateTime day) {
@@ -211,20 +186,11 @@ class CalendarWidgetModel extends WidgetModel {
     }
   }
 
-  void changeVisibleDates(DateTime from) {
-    ///Changes displayed current month appointments in appointment_list_filtered.dart.
-    print('changeVisibleDates from: ' + from.toString());
-    firstVisibleDate = from;
-
-    getCurrentMonthAppointments();
-  }
-
   void selectFilter(FilterType result) {
     appointmentsFilter = result;
     print(appointmentsFilter);
     if (appointmentsFilter == FilterType.current) {
-      changeVisibleDates(
-          DateTime(DateTime.now().year, DateTime.now().month, 1));
+      state.from = DateTime(DateTime.now().year, DateTime.now().month, 1);
     }
   }
 }

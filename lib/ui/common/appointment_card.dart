@@ -6,12 +6,14 @@ import 'package:yadonor/data/appointment-item.dart';
 class AppointmentCard extends StatelessWidget {
   final Appointment appointment;
   final bool hasCloseIcon;
-  final void Function() onRemoveButtonPressed;
+  final void Function(DateTime) onRemoveButtonPressed;
+  final DateTime day;
 
   AppointmentCard({
     @required this.appointment,
     this.hasCloseIcon,
-    this.onRemoveButtonPressed
+    this.onRemoveButtonPressed,
+    this.day,
   });
 
   @override
@@ -36,7 +38,7 @@ class AppointmentCard extends StatelessWidget {
       subtitle: Text(appointment.appointment),
       trailing: hasCloseIcon ? IconButton(
         icon: Icon(Icons.close),
-        onPressed: onRemoveButtonPressed,
+        onPressed: () => onRemoveButtonPressed(day),
       ) : null,
     );
   }

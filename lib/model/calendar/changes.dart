@@ -3,12 +3,18 @@ import 'package:yadonor/data/appointment-item.dart';
 
 class GetAppointments extends FutureChange<List<Appointment>> {}
 
-class AddAppointment extends FutureChange<void> {
+class AddAppointment extends FutureChange<Appointment> {
   final DateTime selectedDay;
   AddAppointment(this.selectedDay);
 }
 
-class RemoveAppointment extends FutureChange<void> {
+class RemoveAppointment extends FutureChange<Appointment> {
   final DateTime selectedDay;
   RemoveAppointment(this.selectedDay);
 }
+
+// class ChangeVisibleDates extends FutureChange<void> {
+//   final DateTime firstVisibleDate;
+//   ChangeVisibleDates(this.firstVisibleDate);
+// }
+

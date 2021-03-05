@@ -14,22 +14,26 @@ class GetAppointmentsPerformer
       _service.getAppointments();
 }
 
-class AddAppointmentPerformer extends FuturePerformer<void, AddAppointment> {
-  AddAppointmentPerformer(this._service, this.selectedDay);
+class AddAppointmentPerformer extends FuturePerformer<Appointment, AddAppointment> {
+  AddAppointmentPerformer(this._service);
   final AppointmentsRepository _service;
-  final DateTime selectedDay;
 
   @override
-  Future<void> perform(AddAppointment change) =>
-      _service.addAppointment(selectedDay);
+  Future<Appointment> perform(AddAppointment change) =>
+      _service.addAppointment(change.selectedDay);
 }
 
-class RemoveAppointmentPerformer extends FuturePerformer<void, RemoveAppointment> {
-  RemoveAppointmentPerformer(this._service, this.selectedDay);
+class RemoveAppointmentPerformer extends FuturePerformer<Appointment, RemoveAppointment> {
+  RemoveAppointmentPerformer(this._service);
   final AppointmentsRepository _service;
-  final DateTime selectedDay;
 
   @override
-  Future<void> perform(RemoveAppointment change) =>
-      _service.removeAppointment(selectedDay);
+  Future<Appointment> perform(RemoveAppointment change) =>
+      _service.removeAppointment(change.selectedDay);
 }
+
+// class ChangeVisibleDatesPerformer extends FuturePerformer<void, ChangeVisibleDates> {
+//   ChangeVisibleDatesPerformer(this._service, this.firstVisibleDates);
+//   final AppointmentsRepository _service;
+//   final DateTime firstVisibleDates;
+// } 
