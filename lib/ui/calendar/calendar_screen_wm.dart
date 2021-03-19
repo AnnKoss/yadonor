@@ -30,6 +30,8 @@ class CalendarState {
         currentMonthAppointments.toString());
     return currentMonthAppointments;
   }
+
+  FilterType selectedFilter = FilterType.current;
 }
 
 WidgetModel buildCalendarWM(BuildContext context) {
@@ -67,6 +69,7 @@ class CalendarWidgetModel extends WidgetModel {
   final Action onAddAppointmentTap = Action<void>();
   final Action onRemoveAppointmentTap = Action<DateTime>();
   final Action onChangeVisibleDates = Action<DateTime>();
+  final Action onChangeFilter = Action<FilterType>();
 
   @override
   onLoad() {
@@ -84,33 +87,29 @@ class CalendarWidgetModel extends WidgetModel {
     subscribe(
       onAddAppointmentTap.stream,
       (_) {
-        // streamedState.loading();
-        print('onAddAppointmentTap loading: ' + streamedState.toString());
-
         _addAppointment();
-        // streamedState.accept(EntityState.content(state));
       },
     );
 
     subscribe(
       onRemoveAppointmentTap.stream,
       (day) {
-        streamedState.loading();
-        print('currentMonthAppointments before removing: ' +
-            state.currentMonthAppointments().toString());
         _removeAppointment(day);
-        streamedState.accept(EntityState.content(state));
-        print('currentMonthAppointments after removing: ' +
-            state.currentMonthAppointments().toString());
+        // streamedState.accept(EntityState.content(state));
       },
     );
 
     subscribe(
       onChangeVisibleDates.stream,
       (from) {
-        state.from = from;
-        print('changeVisibleDaysStream');
-        streamedState.accept(EntityState.content(state));
+        _changeVisibleDates(from);
+      },
+    );
+
+    subscribe(
+      onChangeFilter.stream,
+      (filter) {
+        _changeFilter(filter);
       },
     );
   }
@@ -125,21 +124,23 @@ class CalendarWidgetModel extends WidgetModel {
     );
   }
 
+  DateTime _selectedDay = DateTime.now();
+
   _selectDay(DateTime day) {
     ///A handler for [onDaySelected] property of Calendar widget.
     if (day != null) {
       _selectedDay = day;
     }
-    selectedDayCheck(day);
     return;
   }
 
   void _addAppointment() {
+    print('_addAppointment performed');
     doFuture<Appointment>(
       model.perform(AddAppointment(_selectedDay)),
       (Appointment addedAppointment) {
         print('addedAppointment :' + addedAppointment.day.toString());
-        state.appointments.add(addedAppointment);
+        // state.appointments.add(addedAppointment);
         print('_addAppointment state.currentMonthAppointments:' +
             state
                 .currentMonthAppointments()
@@ -159,38 +160,23 @@ class CalendarWidgetModel extends WidgetModel {
         print('removed appointment: ' + removedAppointment.toString());
         state.currentMonthAppointments();
         streamedState.accept(EntityState.content(state));
-        print('State after removing: ' + state.currentMonthAppointments().toString());
+        print('State after removing: ' +
+            state.currentMonthAppointments().toString());
       },
     );
   }
 
-  DateTime _selectedDay = DateTime.now();
-
-  FilterType appointmentsFilter = FilterType.current;
-
-  // List<Map<FilterType, String>> popupMenu = [
-  //   {FilterType.future: 'Предстоящие донации'},
-  //   {FilterType.past: 'Прошедшие донации'},
-  //   {FilterType.current: 'Показать календарь'},
-  // ];
-
-  ///is the [_selectedDay] in the future (true) or in the past
-  bool isFutureDate = true;
-
-  void selectedDayCheck(DateTime day) {
-    ///Checks if [selectedDay] is in the past or in the future.
-    if (day.isAfter(DateTime.now().subtract(Duration(days: 1)))) {
-      isFutureDate = true;
-    } else {
-      isFutureDate = false;
-    }
+  void _changeVisibleDates(from) {
+    state.from = from;
+    print('changeVisibleDaysStream');
+    streamedState.accept(EntityState.content(state));
   }
 
-  void selectFilter(FilterType result) {
-    appointmentsFilter = result;
-    print(appointmentsFilter);
-    if (appointmentsFilter == FilterType.current) {
+  void _changeFilter(filter) {
+    state.selectedFilter = filter;
+    if (filter == FilterType.current) {
       state.from = DateTime(DateTime.now().year, DateTime.now().month, 1);
     }
+    streamedState.accept(EntityState.content(state));
   }
 }

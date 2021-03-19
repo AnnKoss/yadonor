@@ -66,7 +66,8 @@ class DonorApp extends StatelessWidget {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final User user = _auth.currentUser;
 
-    AppointmentsRepository.globalAppointmentsRepository = AppointmentsRepository(AppointmentsStorage());
+    AppointmentsRepository.globalAppointmentsRepository =
+        AppointmentsRepository(AppointmentsStorage());
     //FIXME
 
     return MaterialApp(
@@ -86,6 +87,13 @@ class DonorApp extends StatelessWidget {
         fontFamily: 'PTSans',
         appBarTheme: AppBarTheme(
           color: Colors.white,
+          // textTheme: TextTheme(
+          //   headline1: TextStyle(
+          //     color: Theme.of(context).primaryColor,
+          //     fontSize: 20,
+          //     fontWeight: FontWeight.bold,
+          //   ),
+          // ),
           iconTheme: IconThemeData(
             color: Theme.of(context).primaryColor,
           ),

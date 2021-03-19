@@ -1,11 +1,11 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:surf_mwwm/surf_mwwm.dart';
 
-import 'package:yadonor/data/appointment-item.dart';
 import 'package:yadonor/ui/calendar/calendar_screen_wm.dart';
 import 'package:yadonor/ui/calendar/widgets/appointment_list_filtered.dart';
 import 'package:yadonor/ui/calendar/calendar.dart';
 import 'package:yadonor/ui/common/main_drawer.dart';
+import 'package:yadonor/utils/constants.dart' as constants;
 
 ///Chooses whether to show events of the current month, all the future or all the past ones.
 
@@ -27,32 +27,31 @@ class _CalendarScreenState extends WidgetState<CalendarWidgetModel> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'КАЛЕНДАРЬ ДОНАЦИЙ',
-            style: Theme.of(context).textTheme.title,
+            constants.CALENDAR_SCREEN_TITLE,
+            // style: Theme.of(context).appBarTheme.textTheme.headline1,
+            style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           actions: <Widget>[
             PopupMenuButton<FilterType>(
-              onSelected: wm.selectFilter,
-              itemBuilder: (context) => <PopupMenuEntry<FilterType>>[
-                // wm.popupMenu.map((item) {
-                //   PopupMenuItem<FilterType>(
-                //   value: item.key,
-                //   child: Text(item.value),
-                // );
-                // }).toList(),
+              onSelected: wm.onChangeFilter,
+              itemBuilder: (context) => 
+              <PopupMenuEntry<FilterType>>[
                 PopupMenuItem<FilterType>(
                   value: FilterType.future,
-                  child: Text('Предстоящие донации'),
+                  child: Text(constants.CALENDAR_FILTER_FUTURE_TEXT),
                 ),
                 PopupMenuDivider(),
                 PopupMenuItem<FilterType>(
                   value: FilterType.past,
-                  child: Text('Прошедшие донации'),
+                  child: Text(constants.CALENDAR_FILTER_PAST_TEXT),
                 ),
                 PopupMenuDivider(),
                 PopupMenuItem<FilterType>(
                   value: FilterType.current,
-                  child: Text('Показать календарь'),
+                  child: Text(constants.CALENDAR_FILTER_CURRENT_TEXT),
                 ),
               ],
             ),
@@ -61,10 +60,38 @@ class _CalendarScreenState extends WidgetState<CalendarWidgetModel> {
         drawer: MainDrawer(),
         body: EntityStateBuilder<CalendarState>(
           streamedState: wm.streamedState,
-          child: (context, appointments) {
+          child: (context, state) {
             return Column(children: <Widget>[
-              Container(
-                child: (wm.appointmentsFilter == FilterType.current)
+              (state.selectedFilter == FilterType.current)
+                  ? Card(
+                      elevation: 3,
+                      margin: EdgeInsets.only(top: 10),
+                      child: Calendar(
+                        onDaySelected: (day, _) {
+                          wm.onDaySelected(day);
+                        },
+                        onVisibleDaysChanged: (from, to, format) {
+                          wm.onChangeVisibleDates(from);
+                        },
+                        appointments: state.appointments,
+                      ),
+                    )
+                  : SizedBox(height: 0),
+              Flexible(
+                fit: FlexFit.loose,
+                child: AppointmentListFiltered(
+                  state.appointments,
+                  state.currentMonthAppointments(),
+                  wm.onRemoveAppointmentTap,
+                  state.selectedFilter,
+                ),
+              ),
+            ]);
+          },
+          loadingBuilder: (context, state) {
+            return Column(
+              children: <Widget>[
+                (state.selectedFilter == FilterType.current)
                     ? Card(
                         elevation: 3,
                         margin: EdgeInsets.only(top: 10),
@@ -75,51 +102,19 @@ class _CalendarScreenState extends WidgetState<CalendarWidgetModel> {
                           onVisibleDaysChanged: (from, to, format) {
                             wm.onChangeVisibleDates(from);
                           },
-                          appointments: wm.state.appointments,
+                          appointments: [],
                         ),
                       )
                     : SizedBox(height: 0),
-              ),
-              Flexible(
-                fit: FlexFit.loose,
-                child: AppointmentListFiltered(
-                  wm.state.appointments,
-                  wm.state.currentMonthAppointments(),
-                  wm.onRemoveAppointmentTap,
-                  wm.appointmentsFilter,
-                ),
-              ),
-            ]);
-          },
-          loadingBuilder: (context, appointments) {
-            return Column(
-              children: <Widget>[
-                Container(
-                  child: (wm.appointmentsFilter == FilterType.current)
-                      ? Card(
-                          elevation: 3,
-                          margin: EdgeInsets.only(top: 10),
-                          child: Calendar(
-                            onDaySelected: (day, _) {
-                              wm.onDaySelected(day);
-                            },
-                            onVisibleDaysChanged: (from, to, format) {
-                              wm.onChangeVisibleDates(from);
-                            },
-                            appointments: [],
-                          ),
-                        )
-                      : SizedBox(height: 0),
-                ),
                 Flexible(
                   fit: FlexFit.loose,
                   child: Stack(
                     children: <Widget>[
                       AppointmentListFiltered(
-                        wm.state.appointments,
-                        wm.state.currentMonthAppointments(),
+                        state.appointments,
+                        state.currentMonthAppointments(),
                         wm.onRemoveAppointmentTap,
-                        wm.appointmentsFilter,
+                        state.selectedFilter,
                       ),
                       Container(
                           width: double.infinity,
@@ -133,21 +128,12 @@ class _CalendarScreenState extends WidgetState<CalendarWidgetModel> {
             );
           },
         ),
-
-        // button(
-        //   context: context,
-        //   onPressed: () => ,
-        //   buttonText: isFutureDate ? 'Запланировать' : 'Добавить',
-        // ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             wm.onAddAppointmentTap();
             print('button pressed');
           },
           backgroundColor: Theme.of(context).accentColor,
-          // wm.isFutureDate
-          //     ? Theme.of(context).accentColor
-          //     : Color(0xffed6056),
           elevation: 5,
           child: Icon(Icons.add),
         ));
