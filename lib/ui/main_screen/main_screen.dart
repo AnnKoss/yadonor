@@ -6,7 +6,7 @@ import 'package:yadonor/data/appointment-item.dart';
 import 'package:yadonor/ui/calendar/calendar_screen.dart';
 import 'package:yadonor/ui/questionary/pre_questionary_screen.dart';
 import 'package:yadonor/ui/address/address_screen.dart';
-import 'package:yadonor/ui/main_screen/main_screen_button.dart';
+import 'package:yadonor/ui/main_screen/widgets/main_screen_button.dart';
 import 'package:yadonor/ui/common/main_drawer.dart';
 import 'package:yadonor/ui/common/appointment_card.dart';
 import 'package:yadonor/ui/main_screen/main_screen_wm.dart';
@@ -58,7 +58,7 @@ class _MainScreenState extends WidgetState<MainScreenWidgetModel> {
                       child: (context, nearestAppointment) {
                         return (nearestAppointment != null)
                             ? Container(
-                                margin: EdgeInsets.all(5),
+                                margin: const EdgeInsets.all(5),
                                 width: 260,
                                 child: Center(
                                   child: AppointmentCard(
@@ -77,7 +77,7 @@ class _MainScreenState extends WidgetState<MainScreenWidgetModel> {
                               );
                       },
                       loadingChild: Container(
-                        padding: EdgeInsets.symmetric(vertical: 22),
+                        padding: const EdgeInsets.symmetric(vertical: 22),
                         child: CircularProgressIndicator(),
                       ),
                     ),
@@ -85,17 +85,17 @@ class _MainScreenState extends WidgetState<MainScreenWidgetModel> {
                 ),
               ),
             ),
-            mainScreenButton(
+            MainScreenButton(
               onPressed: () =>
                   Navigator.of(context).pushNamed(CalendarScreen.routeName),
               buttonText: constants.CALENDAR_SCREEN_LINK_TEXT,
             ),
-            mainScreenButton(
+            MainScreenButton(
               onPressed: () => Navigator.of(context)
                   .pushReplacementNamed(PreQuestionaryScreen.routeName),
               buttonText: constants.PREQUESTIONARY_SCREEN_LINL_TEXT,
             ),
-            mainScreenButton(
+            MainScreenButton(
               onPressed: () => Navigator.of(context)
                   .pushReplacementNamed(AddressScreen.routeName),
               buttonText: constants.ADRESS_SCREEN_LINK_TEXT,

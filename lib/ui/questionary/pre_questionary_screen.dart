@@ -33,7 +33,7 @@ class PreQuestionaryScreen extends StatelessWidget {
                 ],
               ),
             ),
-            button(
+            Button(
               context: context,
               onPressed: () => Navigator.of(context)
                   .pushNamed(QuestionaryScreen.routeName),

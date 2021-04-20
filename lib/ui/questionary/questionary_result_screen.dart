@@ -48,7 +48,7 @@ class QuestionaryResultScreen extends StatelessWidget {
           children: <Widget>[
             (success == 'true') ? successText : failText,
             SizedBox(height: 30),
-            button(
+            Button(
               context: context,
               onPressed: () => Navigator.of(context).pushReplacementNamed('/'),
               buttonText: 'На главную',

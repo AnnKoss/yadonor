@@ -11,7 +11,7 @@ class AnswerOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return button(
+    return Button(
       context: context,
       onPressed: () => onClick(order),
       buttonText: answerText,

@@ -5,7 +5,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:yadonor/model/calendar/repository/calendar_repository.dart';
 
 import 'package:yadonor/ui/main_screen/main_screen.dart';
-import 'package:yadonor/ui/calendar/widgets/calendar_add_screen.dart';
 import 'package:yadonor/ui/calendar/calendar_screen.dart';
 import 'package:yadonor/ui/precautions/precautions_screen.dart';
 import 'package:yadonor/ui/questionary/questionary_result_screen.dart';
@@ -121,7 +120,6 @@ class DonorApp extends StatelessWidget {
         PrecautionsScreen.routeName: (ctx) => PrecautionsScreen(),
         CalendarScreen.routeName: (ctx) => CalendarScreen(),
         AddressScreen.routeName: (ctx) => AddressScreen(),
-        CalendarAddScreen.routeName: (ctx) => CalendarAddScreen(),
       },
     );
   }

@@ -31,9 +31,3 @@ class RemoveAppointmentPerformer extends FuturePerformer<Appointment, RemoveAppo
   Future<Appointment> perform(RemoveAppointment change) =>
       _service.removeAppointment(change.selectedDay);
 }
-
-// class ChangeVisibleDatesPerformer extends FuturePerformer<void, ChangeVisibleDates> {
-//   ChangeVisibleDatesPerformer(this._service, this.firstVisibleDates);
-//   final AppointmentsRepository _service;
-//   final DateTime firstVisibleDates;
-// } 

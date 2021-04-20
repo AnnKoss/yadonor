@@ -23,38 +23,42 @@ class LogInForm extends StatelessWidget {
       key: loginKey,
       child: Column(
         children: <Widget>[
-          authTextFormField(TextFormField(
-            controller: emailController,
-            textInputAction: TextInputAction.next,
-            focusNode: emailFocus,
-            onFieldSubmitted: (term) {
-              fieldFocusChange(context, emailFocus, passwordFocus);
-            },
-            decoration: InputDecoration(
-              hintText: 'E-mail',
-              prefixIcon: Padding(
-                padding: EdgeInsets.all(2),
-                child: Icon(Icons.email),
+          authTextFormField(
+            TextFormField(
+              controller: emailController,
+              textInputAction: TextInputAction.next,
+              focusNode: emailFocus,
+              onFieldSubmitted: (term) {
+                fieldFocusChange(context, emailFocus, passwordFocus);
+              },
+              decoration: InputDecoration(
+                hintText: 'E-mail',
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: Icon(Icons.email),
+                ),
               ),
+              keyboardType: TextInputType.emailAddress,
+              validator: emailValidator,
             ),
-            keyboardType: TextInputType.emailAddress,
-            validator: emailValidator,
-          )),
-          authTextFormField(TextFormField(
-            controller: passwordController,
-            textInputAction: TextInputAction.done,
-            focusNode: passwordFocus,
-            onFieldSubmitted: (_) => FocusScope.of(context).unfocus(),
-            decoration: InputDecoration(
-              hintText: 'Пароль',
-              prefixIcon: Padding(
-                padding: EdgeInsets.all(2),
-                child: Icon(Icons.lock),
+          ),
+          authTextFormField(
+            TextFormField(
+              controller: passwordController,
+              textInputAction: TextInputAction.done,
+              focusNode: passwordFocus,
+              onFieldSubmitted: (_) => FocusScope.of(context).unfocus(),
+              decoration: InputDecoration(
+                hintText: 'Пароль',
+                prefixIcon: Padding(
+                  padding: EdgeInsets.all(2),
+                  child: Icon(Icons.lock),
+                ),
               ),
+              validator: passwordValidator,
+              obscureText: true,
             ),
-            validator: passwordValidator,
-            obscureText: true,
-          )),
+          ),
         ],
       ),
     );

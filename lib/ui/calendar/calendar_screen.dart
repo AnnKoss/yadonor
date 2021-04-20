@@ -2,8 +2,8 @@
 import 'package:surf_mwwm/surf_mwwm.dart';
 
 import 'package:yadonor/ui/calendar/calendar_screen_wm.dart';
-import 'package:yadonor/ui/calendar/widgets/appointment_list_filtered.dart';
-import 'package:yadonor/ui/calendar/calendar.dart';
+import 'package:yadonor/ui/calendar/widgets/calendar_screen_filtered_appointments.dart';
+import 'package:yadonor/ui/calendar/widgets/calendar_widget.dart';
 import 'package:yadonor/ui/common/main_drawer.dart';
 import 'package:yadonor/utils/constants.dart' as constants;
 
@@ -65,7 +65,7 @@ class _CalendarScreenState extends WidgetState<CalendarWidgetModel> {
               (state.selectedFilter == FilterType.current)
                   ? Card(
                       elevation: 3,
-                      margin: EdgeInsets.only(top: 10),
+                      margin: const EdgeInsets.only(top: 10),
                       child: Calendar(
                         onDaySelected: (day, _) {
                           wm.onDaySelected(day);
@@ -94,7 +94,7 @@ class _CalendarScreenState extends WidgetState<CalendarWidgetModel> {
                 (state.selectedFilter == FilterType.current)
                     ? Card(
                         elevation: 3,
-                        margin: EdgeInsets.only(top: 10),
+                        margin: const EdgeInsets.only(top: 10),
                         child: Calendar(
                           onDaySelected: (day, _) {
                             wm.onDaySelected(day);

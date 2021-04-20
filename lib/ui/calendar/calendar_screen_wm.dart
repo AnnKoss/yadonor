@@ -26,8 +26,6 @@ class CalendarState {
         return selectedAppointmentMonth == currentMonth;
       },
     ).toList();
-    print('CalendarState currentMonthAppointments: ' +
-        currentMonthAppointments.toString());
     return currentMonthAppointments;
   }
 
@@ -74,7 +72,7 @@ class CalendarWidgetModel extends WidgetModel {
   @override
   onLoad() {
     super.onLoad();
-    print('onLoad');
+    print('calendar_screen_wm onLoad');
     _getAppointments();
 
     subscribe(
@@ -135,17 +133,11 @@ class CalendarWidgetModel extends WidgetModel {
   }
 
   void _addAppointment() {
-    print('_addAppointment performed');
     doFuture<Appointment>(
       model.perform(AddAppointment(_selectedDay)),
       (Appointment addedAppointment) {
-        print('addedAppointment :' + addedAppointment.day.toString());
-        // state.appointments.add(addedAppointment);
-        print('_addAppointment state.currentMonthAppointments:' +
-            state
-                .currentMonthAppointments()
-                .map((e) => e.day.toString())
-                .toString());
+        print('addedAppointment : $addedAppointment.day');
+        state.appointments.add(addedAppointment);
         streamedState.accept(EntityState.content(state));
       },
     );
@@ -157,18 +149,16 @@ class CalendarWidgetModel extends WidgetModel {
       (Appointment removedAppointment) {
         state.appointments
             .removeWhere((element) => element.day == removedAppointment.day);
-        print('removed appointment: ' + removedAppointment.toString());
+        print('removed appointment: $removedAppointment');
         state.currentMonthAppointments();
         streamedState.accept(EntityState.content(state));
-        print('State after removing: ' +
-            state.currentMonthAppointments().toString());
       },
     );
   }
 
   void _changeVisibleDates(from) {
     state.from = from;
-    print('changeVisibleDaysStream');
+    print('changeVisibleDays');
     streamedState.accept(EntityState.content(state));
   }
 

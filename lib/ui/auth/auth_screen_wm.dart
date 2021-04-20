@@ -11,14 +11,16 @@ class AuthWidgetModel extends WidgetModel {
   static WidgetModel buildAuthScreenWM(BuildContext context) {
     return AuthWidgetModel(
       WidgetModelDependencies(),
-      Model([
-        LoginPerformer(
-          AuthRepository(),
-        ),
-        SignUpPerformer(
-          AuthRepository(),
-        ),
-      ]),
+      Model(
+        [
+          LoginPerformer(
+            AuthRepository(),
+          ),
+          SignUpPerformer(
+            AuthRepository(),
+          ),
+        ],
+      ),
       Navigator.of(context),
     );
   }
@@ -52,7 +54,6 @@ class AuthWidgetModel extends WidgetModel {
               navigator.pushReplacementNamed(MainScreen.routeName);
             }
           },
-          // onError: handleError,
         );
       },
     );
@@ -67,7 +68,6 @@ class AuthWidgetModel extends WidgetModel {
               navigator.pushReplacementNamed(MainScreen.routeName);
             }
           },
-          // onError: handleError,
         );
       },
     );

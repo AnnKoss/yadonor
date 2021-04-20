@@ -24,10 +24,11 @@ class AddressList extends StatelessWidget {
         //     ),
         //   ),
         // );
+        //ToDo: Fix markers
         return Card(
-          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 5),
+            padding: const EdgeInsets.symmetric(vertical: 5),
             child: ListTile(
               title: Text(addressList[i].title),
               subtitle: Column(

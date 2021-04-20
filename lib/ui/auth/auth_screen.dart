@@ -1,6 +1,4 @@
-﻿// import 'dart:js';
-
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:surf_mwwm/surf_mwwm.dart';
 
 import 'package:yadonor/ui/auth/auth_screen_wm.dart';
@@ -36,7 +34,7 @@ class _AuthScreenState extends WidgetState<AuthWidgetModel> {
         body: Container(
           width: double.infinity,
           height: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -90,7 +88,7 @@ class _AuthScreenState extends WidgetState<AuthWidgetModel> {
                                         passwordFocus,
                                       ),
                                       SizedBox(height: 20),
-                                      button(
+                                      Button(
                                         context: context,
                                         buttonText: 'Войти',
                                         onPressed: () => wm.submitLoginAction(),
@@ -110,7 +108,7 @@ class _AuthScreenState extends WidgetState<AuthWidgetModel> {
                                         confirmPasswordFocus,
                                       ),
                                       SizedBox(height: 20),
-                                      button(
+                                      Button(
                                         context: context,
                                         buttonText: 'Зарегистрироваться',
                                         onPressed: () =>

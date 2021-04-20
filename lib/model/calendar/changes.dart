@@ -13,8 +13,3 @@ class RemoveAppointment extends FutureChange<Appointment> {
   RemoveAppointment(this.selectedDay);
 }
 
-// class ChangeVisibleDates extends FutureChange<void> {
-//   final DateTime firstVisibleDate;
-//   ChangeVisibleDates(this.firstVisibleDate);
-// }
-

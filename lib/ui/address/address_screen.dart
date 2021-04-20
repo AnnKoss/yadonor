@@ -1,5 +1,4 @@
 ﻿import 'package:flutter/material.dart';
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:yadonor/ui/common/main_drawer.dart';
@@ -14,9 +13,7 @@ class AddressScreen extends StatefulWidget {
 
 class _AddressScreenState extends State<AddressScreen> {
   GoogleMapController mapController;
-
   final LatLng _center = const LatLng(59.9311, 30.3609);
-
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
@@ -38,6 +35,7 @@ class _AddressScreenState extends State<AddressScreen> {
             child: GoogleMap(
               onMapCreated: _onMapCreated,
               // markers: Set<Marker>.of(markers),
+              //ToDo: fix markers
               initialCameraPosition: CameraPosition(
                 target: _center,
                 zoom: 10.0,

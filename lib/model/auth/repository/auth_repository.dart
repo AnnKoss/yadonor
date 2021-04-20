@@ -12,7 +12,9 @@ class AuthRepository {
       );
       user = authResult.user;
     } on FirebaseAuthException catch (error) {
-      print('login failed: ' + error.code);
+      print(
+        'login failed: ${error.code}',
+      );
     }
     if (user != null) {
       return true;
@@ -36,10 +38,9 @@ class AuthRepository {
       print('signup failed: ' + error.code);
     }
 
-     if (user != null) {
+    if (user != null) {
       return true;
     } else
       return false;
-
   }
 }
