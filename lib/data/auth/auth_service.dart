@@ -35,12 +35,5 @@ class AuthService {
     }
 
     return user;
-//  if (user != null) {
-//    Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
-
-//    // sign in successfully
-//  } else {
-//    authenticationErrorDialog(context);
-//  }
   }
 }
